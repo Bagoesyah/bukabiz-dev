@@ -65,11 +65,12 @@ function PanduanBisnis() {
 
   return (
     <Layout title="Panduan Bisnis">
-      <SectionCategory />
+      {/* <SectionCategory /> */}
       <SectionPath
         path={["Home", "Panduan Bisnis"]}
         title="Belajar Panduan Bisnis Dulu"
         count={dataArticle?.totalRows}
+        className="hidden md:flex"
       />
       <hr />
       <ContainerList>

@@ -69,6 +69,7 @@ function Hits() {
         path={["Home", "Yang lagi hits"]}
         title="Yang lagi hits"
         count={dataArticle?.totalRows}
+        className=" hidden md:flex"
       />
       <hr />
       <ContainerList>

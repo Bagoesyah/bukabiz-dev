@@ -20,7 +20,7 @@ function CardHits({
       >
         <div
           className={`bg-white flex flex-col ${
-            !isDetail && "w-72"
+            !isDetail && "w-40 md:w-72"
           } rounded-xl shadow-card`}
         >
           <div className=" relative flex justify-center items-center">
@@ -35,18 +35,18 @@ function CardHits({
             />
             {featured === "video" && <IconPlay />}
           </div>
-          <div className=" p-6">
+          <div className="p-2 md:p-6">
             <Typography
               text={title.length < 45 ? title : title.slice(0, 45) + ".."}
               variant="card"
-              className=" h-24"
+              className="h-16 md:h-24"
             />
             {!isDetail && (
               <Typography
                 text={desc.length < 110 ? desc : desc.slice(0, 110) + ".."}
                 variant="card"
                 paragraph={true}
-                className="mt-3 h-20"
+                className="mt-2 h-12md:mt-3 md:h-20"
               />
             )}
           </div>

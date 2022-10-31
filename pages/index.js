@@ -25,7 +25,6 @@ function Home() {
         title="Peluang. Jangan Sampai Lolos! "
         data={peluang}
         link="peluang-bisnis"
-        className="text-lg"
       />
       <hr />
       <SectionPanduan
