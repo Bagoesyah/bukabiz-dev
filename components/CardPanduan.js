@@ -1,16 +1,29 @@
-import Image from "next/image"
-import {
-  Typography,
-  ButtonRounded,
-  IconPlay
-} from "@components/index"
+import Image from "next/image";
+import { Typography, ButtonRounded, IconPlay } from "@components/index";
 
-function CardPanduan({ variant, articleId, title, image, alt, businnesStage, desc, onClick, pricing }) {
-  const loader = ({ src }) => image ?? image
+function CardPanduan({
+  variant,
+  articleId,
+  title,
+  image,
+  alt,
+  businnesStage,
+  desc,
+  onClick,
+  pricing,
+}) {
+  const loader = ({ src }) => image ?? image;
   return (
-    <div className={` p-2  ${variant === 'home' ? 'p-2 py-8 pb-20' : ' pb-4'}`}>
-      <div className={` bg-white flex flex-col rounded-lg shadow-card ${variant === 'home' ? 'w-72' : ''} `} >
-        <div className=" relative flex justify-center items-center cursor-pointer" onClick={onClick}>
+    <div className={` p-2  ${variant === "home" ? "p-2 py-8 pb-20" : " pb-4"}`}>
+      <div
+        className={` bg-white flex flex-col rounded-lg shadow-lg md:shadow-card ${
+          variant === "home" ? "w-72" : ""
+        } `}
+      >
+        <div
+          className=" relative flex justify-center items-center cursor-pointer"
+          onClick={onClick}
+        >
           <Image
             loader={loader}
             src={image ?? image}
@@ -27,11 +40,11 @@ function CardPanduan({ variant, articleId, title, image, alt, businnesStage, des
             </div>
           )}
         </div>
-        <div className=" p-6">
+        <div className=" p-2 md:p-6">
           <Typography
-            text={title.length < 45 ? title : title.slice(0, 45) + '..'}
+            text={title.length < 45 ? title : title.slice(0, 45) + ".."}
             variant="card"
-            className=" h-24"
+            className=" h-14 md:h-24"
           />
           <Typography
             text={businnesStage}
@@ -39,7 +52,7 @@ function CardPanduan({ variant, articleId, title, image, alt, businnesStage, des
             className=" uppercase mt-5"
           />
           <div
-            className="desc-card mt-2 h-20"
+            className="desc-card mt-2 h-20 "
             dangerouslySetInnerHTML={{ __html: desc }}
           />
           <div className=" flex justify-center">
@@ -48,6 +61,6 @@ function CardPanduan({ variant, articleId, title, image, alt, businnesStage, des
         </div>
       </div>
     </div>
-  )
+  );
 }
-export default CardPanduan
+export default CardPanduan;

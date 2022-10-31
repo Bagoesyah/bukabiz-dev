@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-import { useGet } from "@library/useAPI";
+import { useGet, usePost } from "@library/useAPI";
+import { axiosGet } from "@library/useAxios";
 import {
   Layout,
   SectionPath,
@@ -14,30 +16,70 @@ import {
 
 import ArrowDown from "@assets/ArrowDown.svg";
 import ArrowUp from "@assets/ArrowUp.svg";
-import KB from "@assets/KB.svg";
-import BO from "@assets/BO.svg";
-import LS from "@assets/LS.svg";
-import FR from "@assets/FR.svg";
-import PeluangAlternatif from "@assets/PeluangAlternatif.png";
-import { isTemplateMiddle } from "typescript";
 
 function PeluangBisnis() {
-  const peluang = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const suka = [1, 2, 3, 4, 5, 6];
+  const router = useRouter();
+  const [listFilter, setListFilter] = useState({
+    category: {},
+    investment: {},
+    cities: {},
+    browse: {},
+    sort: {},
+  });
+  const [filter, setFilter] = useState({
+    category: {
+      id: "",
+      name: "Pilih Kategori",
+    },
+    investment: {
+      id: "",
+      name: "Besaran Investasi",
+    },
+    cities: {
+      id: "",
+      name: "Pilih Lokasi",
+    },
+    browse: {
+      id: "",
+      name: "",
+    },
+    sort: {
+      id: "",
+      name: "",
+    },
+  });
 
-  const [showTerverifikasi, setShowTerverifikasi] = useState(false);
-  const [showIndustri, setShowIndustri] = useState(false);
-  const [showInvestasi, setShowInvestasi] = useState(false);
-  const [showTLokasi, setShowTLokasi] = useState(false);
+  const [listArticle, setListArticle] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loadMore, setLoadMore] = useState(false);
+
+  const [showCategory, setShowCategory] = useState(false);
+  const [showInvestment, setShowInvestment] = useState(false);
+  const [showCities, setShowCities] = useState(false);
+  const [showSort, setShowSort] = useState(false);
 
   const [popup, setPopup] = useState(false);
+  const [dataModal, setDataModal] = useState({});
   const [share, setShare] = useState(false);
   const [infoEmail1, setInfoEmail1] = useState(false);
   const [infoEmail2, setInfoEmail2] = useState(false);
-  const [filter, setFilter] = useState({
-    sort: "",
-    cities: "",
+
+  const [triggerSearch, setTriggerSearch] = useState(false);
+
+  const { isData, isLoading, isError } = usePost("v1/article/peluang-bisnis", {
+    params: {
+      page: page,
+      limit: 9,
+      category: filter.category.id,
+      investment: filter.investment.id,
+      city: filter.cities.id !== 1 ? filter.cities.id : "",
+      sorting: filter.sort.id,
+      browseCategoryId: filter.browse.id,
+      triggerSearch: triggerSearch,
+    },
   });
+
+  const dataArticle = isData?.data;
 
   const {
     isData: isDataSuka,
@@ -45,8 +87,116 @@ function PeluangBisnis() {
     // isError: isErrorSuka
   } = useGet(`v1/article/mungkin-kamu-suka?limit=4`);
 
-  const { isData: isDataSort } = useGet(`v1/peluang-category/filter`);
-  const { isData: isDataCities } = useGet(`v1/cities/fetch`);
+  useEffect(() => {
+    if (isData === undefined || !isData || isData.length === 0) {
+      // no action
+    } else if (loadMore) {
+      let newListArticle = listArticle.concat(isData.data.items);
+      setListArticle(newListArticle);
+      setLoadMore(false);
+    } else {
+      setListArticle(isData.data.items);
+    }
+  }, [isData]);
+
+  useEffect(() => {
+    getDataFilter("category", "v1/category/fetch?limit=100");
+    getDataFilter("investment", "v1/investment/fetch");
+    getDataFilter("cities", "v1/cities/fetch?limit=1000");
+    getDataFilter("sort", "v1/peluang-category/filter");
+    getDataFilter("browse", "v1/browse-category/fetch");
+  }, []);
+
+  const getDataFilter = (name, url) => {
+    axiosGet(
+      url,
+      {
+        headers: {
+          // Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+      (success) => {
+        setListFilter((prevState) => {
+          return {
+            ...prevState,
+            [name]: success.data.data,
+          };
+        });
+
+        if (name === "sort") {
+          setFilter((prevState) => {
+            return {
+              ...prevState,
+              sort: {
+                id: success?.data?.data?.items[0]?.peluangCatFilId,
+                name: success?.data?.data?.items[0]?.peluangCategoryTitle,
+              },
+            };
+          });
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (listFilter.category && router.query.category) {
+      let category = listFilter?.category?.items?.filter(
+        (item) => item.articleCategoryId == router.query.category
+      );
+      if (category !== undefined) {
+        setFilter((prevState) => {
+          return {
+            ...prevState,
+            category: {
+              id: category[0].articleCategoryId,
+              name: category[0].articleCategoryTitle,
+            },
+          };
+        });
+      }
+    }
+  }, [listFilter]);
+
+  const handleFilter = (name, id, label) => {
+    setFilter({
+      ...filter,
+      [name]: {
+        id: id,
+        name: label,
+      },
+    });
+    handleHideFilter();
+  };
+
+  const handleHideFilter = () => {
+    setShowCategory(false);
+    setShowInvestment(false);
+    setShowCities(false);
+    setShowSort(false);
+  };
+
+  const handleModal = (id) => {
+    axiosGet(
+      `v1/article/pop-up/${id}`,
+      {
+        headers: {
+          // Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+      (success) => {
+        setDataModal(success.data.data);
+        setPopup(true);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
 
   return (
     <Layout title="Peluang Bisnis">
@@ -58,153 +208,266 @@ function PeluangBisnis() {
       />
       <hr />
       <ContainerList>
-        <div className="hidden md:flex space-x-5">
-          {/* <button className=" w-full p-3 px-3 text-sm  rounded border flex justify-between items-center">
-            <span>Pilih Industri</span>
-            <ArrowDown />
-          </button> */}
+        <div className=" hidden md:flex space-x-5">
           <div className=" relative w-full">
-            {!showIndustri ? (
+            {!showCategory ? (
               <div
-                className=" w-full p-3 px-5 text-sm rounded border flex justify-between items-center "
-                onClick={() => setShowIndustri(true)}
+                className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                onClick={() => {
+                  setShowCategory(true);
+                  setShowInvestment(false);
+                  setShowCities(false);
+                  setShowSort(false);
+                }}
               >
-                <span>Pilih Industri</span>
+                <span>{filter.category.name}</span>
                 <ArrowDown />
               </div>
             ) : (
               <div
-                className=" absolute bg-white flex flex-col w-full border rounded top-0"
-                onClick={() => setShowIndustri(false)}
+                className=" absolute bg-white flex flex-col w-full border rounded top-0 z-10 "
+                onClick={() => setShowCategory(false)}
               >
-                <div className=" w-full p-3 px-5 text-sm flex justify-between items-center">
-                  <span>Pilih Industri</span>
+                <div className=" w-full p-3 text-sm flex justify-between items-center">
+                  <span>{filter.category.name}</span>
                   <ArrowUp />
                 </div>
                 <hr />
-                <div className=" flex flex-col py-4">
+                <div className=" flex flex-col py-4 overflow-y-auto h-80">
                   <div
-                    className=" text-sm border-l-8 border-primary p-2 px-4 hover:border-primary cursor-pointer font-bold"
-                    onClick={() => setShowIndustri(false)}
+                    className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.category.id === ""
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                    onClick={() =>
+                      handleFilter("category", "", "Pilih Kategori")
+                    }
                   >
-                    Semua Industri
+                    Pilih Kategori
                   </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Seni & Kerajinan
-                  </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Otomotif
-                  </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Kecantikan
-                  </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Layanan Bisnis
-                  </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Anak-Anak
-                  </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Kebersihan & Perawatan
-                  </div>
-                  <div
-                    className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                    onClick={() => setShowIndustri(false)}
-                  >
-                    Konstruksi
-                  </div>
+                  {listFilter?.category?.items?.map((item) => (
+                    <div
+                      key={item.articleCategoryId}
+                      className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.category.id === item.articleCategoryId
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                      onClick={() =>
+                        handleFilter(
+                          "category",
+                          item.articleCategoryId,
+                          item.articleCategoryTitle
+                        )
+                      }
+                    >
+                      {item.articleCategoryTitle}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
-          <div className=" w-full p-3 px-3 text-sm rounded border flex justify-between items-center">
-            <span>Besaran Investasi</span>
-            <ArrowDown />
+
+          <div className=" relative w-full">
+            {!showInvestment ? (
+              <div
+                className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                onClick={() => {
+                  setShowInvestment(true);
+                  setShowCategory(false);
+                  setShowCities(false);
+                  setShowSort(false);
+                }}
+              >
+                <span>{filter.investment.name}</span>
+                <ArrowDown />
+              </div>
+            ) : (
+              <div
+                className=" absolute bg-white flex flex-col w-full border rounded top-0 z-10 "
+                onClick={() => setShowInvestment(false)}
+              >
+                <div className=" w-full p-3 text-sm flex justify-between items-center">
+                  <span>{filter.investment.name}</span>
+                  <ArrowUp />
+                </div>
+                <hr />
+                <div className=" flex flex-col py-4 overflow-y-auto ">
+                  <div
+                    className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.investment.id === ""
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                    onClick={() =>
+                      handleFilter("investment", "", "Besaran Investasi")
+                    }
+                  >
+                    Besaran Investasi
+                  </div>
+                  {listFilter?.investment?.items?.map((item) => (
+                    <div
+                      key={item.investmentValue}
+                      className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.investment.id === item.investmentValue
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                      onClick={() =>
+                        handleFilter(
+                          "investment",
+                          item.investmentValue,
+                          item.investmentTitle
+                        )
+                      }
+                    >
+                      {item.investmentTitle}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <div className=" w-full p-3 px-3 text-sm  rounded border flex justify-between items-center">
-            <span>Lokasi</span>
-            <ArrowDown />
+          <div className=" relative w-full">
+            {!showCities ? (
+              <div
+                className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                onClick={() => {
+                  setShowCities(true);
+                  setShowCategory(false);
+                  setShowInvestment(false);
+                  setShowSort(false);
+                }}
+              >
+                <span>{filter.cities.name}</span>
+                <ArrowDown />
+              </div>
+            ) : (
+              <div
+                className=" absolute bg-white flex flex-col w-full border rounded top-0 z-10 "
+                onClick={() => setShowCities(false)}
+              >
+                <div className=" w-full p-3 text-sm flex justify-between items-center">
+                  <span>{filter.cities.name}</span>
+                  <ArrowUp />
+                </div>
+                <hr />
+                <div className=" flex flex-col py-4 overflow-y-auto h-80">
+                  {listFilter?.cities?.items?.map((item) => (
+                    <div
+                      key={item.cityId}
+                      className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.cities.id === item.cityId
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                      onClick={() =>
+                        handleFilter("cities", item.cityId, item.cityName)
+                      }
+                    >
+                      {item.cityName}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className=" w-full">
-            <button className=" w-full h-full text-sm font-bold bg-primary border border-primary rounded focus:outline-none duration-300 hover:bg-white">
-              Cari Peluang Terbaik
+            <button
+              className=" w-full h-full text-sm font-bold bg-primary border border-primary rounded focus:outline-none duration-300 hover:bg-white"
+              onClick={() => setTriggerSearch(!triggerSearch)}
+            >
+              {isLoading ? "Loading.." : "Cari Peluang Terbaik"}
             </button>
           </div>
         </div>
       </ContainerList>
       <ContainerList>
-        <div className=" flex w-full">
-          <div className="hidden md:block w-1/4 pr-10">
+        <div className="flex w-full">
+          <div className=" hidden md:block w-1/4 pr-10">
             <div className=" text-3xl font-bold">Browse Kategori</div>
             <div className=" flex flex-col space-y-4 py-12 ">
-              <div className=" flex space-x-4 items-center">
-                <KB />
-                <span>Kemitraan</span>
-              </div>
-              <div className=" flex space-x-4 items-center">
-                <BO />
-                <span>Business Opportunity</span>
-              </div>
-              <div className=" flex space-x-4 items-center">
-                <LS />
-                <span>Lisensi</span>
-              </div>
-              <div className=" flex space-x-4 items-center">
-                <FR />
-                <span className=" font-bold">Francise</span>
-              </div>
+              {listFilter?.browse?.items?.map((item) => (
+                <div
+                  key={item.browseCategoryId}
+                  className={` ${
+                    item.browseCategoryId === filter.browse.id && "font-bold"
+                  } flex space-x-4 items-center hover:font-bold cursor-pointer`}
+                  onClick={() =>
+                    handleFilter(
+                      "browse",
+                      item.browseCategoryId,
+                      item.browseCategoryTitle
+                    )
+                  }
+                >
+                  <div className=" w-8 h-8 rounded-full bg-gray-400" />
+                  <span>{item.browseCategoryTitle}</span>
+                </div>
+              ))}
             </div>
             <hr />
             <div className=" text-3xl font-bold pt-12">Urutkan Cepat</div>
             <div className=" relative mt-5">
-              {!showTerverifikasi ? (
+              {!showSort ? (
                 <div
-                  className=" w-full p-2 px-5 text-sm rounded border flex justify-between items-center "
-                  onClick={() => setShowTerverifikasi(true)}
+                  className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                  onClick={() => {
+                    setShowSort(true);
+                    setShowCategory(false);
+                    setShowInvestment(false);
+                    setShowCities(false);
+                  }}
                 >
-                  <span>Terverifikasi</span>
+                  <span>{filter.sort.name}</span>
                   <ArrowDown />
                 </div>
               ) : (
                 <div
-                  className=" absolute flex flex-col w-full border rounded top-0"
-                  onClick={() => setShowTerverifikasi(false)}
+                  className=" absolute bg-white flex flex-col w-full border rounded top-0 z-10"
+                  onClick={() => setShowSort(false)}
                 >
-                  <div className=" w-full p-2 px-5 text-sm flex justify-between items-center">
-                    <span>Terverifikasi</span>
+                  <div className=" w-full p-3 text-sm flex justify-between items-center">
+                    <span>{filter.sort.name}</span>
                     <ArrowUp />
                   </div>
                   <hr />
                   <div className=" flex flex-col py-4">
-                    <div
-                      className=" text-sm border-l-8 border-primary p-2 px-4 hover:border-primary cursor-pointer font-bold"
-                      onClick={() => setShowTerverifikasi(false)}
-                    >
-                      Terverifikasi
-                    </div>
-                    {isDataSort?.data?.items?.map((item) => (
+                    {listFilter?.sort?.items?.map((item) => (
                       <div
                         key={item.peluangCatFilId}
-                        className=" text-sm border-l-8 border-white p-2 px-4 hover:border-primary cursor-pointer text-gray-500"
-                        onClick={() => setShowTerverifikasi(false)}
+                        className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.sort.id === item.peluangCatFilId
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                        onClick={() =>
+                          handleFilter(
+                            "sort",
+                            item.peluangCatFilId,
+                            item.peluangCategoryTitle
+                          )
+                        }
                       >
                         {item.peluangCategoryTitle}
                       </div>
@@ -214,27 +477,35 @@ function PeluangBisnis() {
               )}
             </div>
           </div>
-          <div className=" w-3/4">
-            <div className=" grid grid-cols-3 gap-4">
-              {peluang?.map((row) => (
+          <div className=" w-full md:w-3/4">
+            <div className=" grid grid-cols-2 md:grid-cols-3 md:gap-4">
+              {listArticle?.map((item) => (
                 <CardPeluangAlternatif
-                  key={row}
+                  key={item.articleId}
                   variant="List"
-                  articleId={row}
-                  title="Toko Kopi Tuku"
-                  businnesStage="Franchise Cafe & Coffee Shop"
-                  image={PeluangAlternatif}
-                  alt="Image Peluang Usaha"
-                  desc="Berdiri 2015, Bandung. Jumlah outlet saat ini 8. Estimasi lama investasi kembali (Pay Back Periode) 18 - 24 bulan *."
-                  onClick={() => setPopup(true)}
-                  pricing="250.000.000"
+                  articleId={item.articleId}
+                  title={item.articleTitle}
+                  category={item.articleCategoryTitle}
+                  image={item.urlImageLong}
+                  desc={item.shortDescription}
+                  onClick={() => handleModal(item.articleId)}
+                  pricing={item.keuangan.minimumInvestRequired}
+                  verified={item.shortInfo.verifikasi}
                 />
               ))}
             </div>
           </div>
         </div>
         <div className="flex justify-center py-4">
-          <ButtonWide icon="down" onClick={() => alert("Soon!")} />
+          {dataArticle?.page !== dataArticle?.lastPage && (
+            <ButtonWide
+              icon="down"
+              onClick={() => {
+                setPage(page + 1);
+                setLoadMore(true);
+              }}
+            />
+          )}
         </div>
       </ContainerList>
 
@@ -242,24 +513,28 @@ function PeluangBisnis() {
 
       <ContainerList>
         <Typography text="Mungkin Kamu Suka" variant="card" />
-        <div className=" grid grid-cols-4 gap-4">
+        <div className=" grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
           {isDataSuka?.data?.items?.map((item) => (
             <CardSuka
               key={item.articleId}
               title={item.articleCategoryTitle}
               image={item.urlImageLong}
               desc={item.articleTitle}
+              onClick={() => router.push(`/article/${item.articleId}`)}
             />
           ))}
         </div>
         <div className="flex justify-center py-4">
-          <ButtonWide icon="right" onClick={() => alert("Soon!")} />
+          <ButtonWide
+            icon="right"
+            onClick={() => router.push("/yang-lagi-hits")}
+          />
         </div>
       </ContainerList>
 
       {popup ? (
         <Modal
-          // {...data}
+          {...dataModal}
           variant="peluang"
           onClick={() => setPopup(false)}
         />

@@ -59,7 +59,7 @@ function SectionPas() {
   return (
     <>
       <section className="relative bg-gray-100 flex justify-center py-12 px-4 md:px-0">
-        <div className=" md:grid md:grid-cols-2 md:gap-8">
+        <div className="md:grid md:grid-cols-2 md:gap-8">
           <AnimatePulse
             name="card terbaru"
             // interval={1000}
@@ -94,10 +94,10 @@ function SectionPas() {
             }
           >
             <div>
-              <div className="absolute top-4 md:top-12 text-lg md:text-4xl font-bold tracking-tight">
+              <div className=" absolute md:static top-4 md:top-12 text-lg md:text-4xl font-bold tracking-tight">
                 Yang Pas Untuk Kamu
               </div>
-              <div className=" grid grid-cols-2 gap-4 mt-4 md:mt-14">
+              <div className=" grid grid-cols-2 gap-4 mt-4">
                 {articlePas?.data?.items &&
                   articlePas?.data?.items.map((item) => (
                     <CardPas

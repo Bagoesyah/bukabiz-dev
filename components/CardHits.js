@@ -20,7 +20,7 @@ function CardHits({
       >
         <div
           className={`bg-white flex flex-col ${
-            !isDetail && "w-40 md:w-72"
+            !isDetail && "w-36 md:w-72"
           } rounded-xl shadow-card`}
         >
           <div className=" relative flex justify-center items-center">
@@ -46,7 +46,7 @@ function CardHits({
                 text={desc.length < 110 ? desc : desc.slice(0, 110) + ".."}
                 variant="card"
                 paragraph={true}
-                className="mt-2 h-12md:mt-3 md:h-20"
+                className="mt-2 h-12 md:mt-3 md:h-20"
               />
             )}
           </div>

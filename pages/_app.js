@@ -1,6 +1,6 @@
-import React from "react"
-import NextProgress from "nextjs-progressbar"
-import '../styles/globals.css'
+import React from "react";
+import NextProgress from "nextjs-progressbar";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
       />
       <Component {...pageProps} />
     </React.Fragment>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

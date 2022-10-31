@@ -33,9 +33,9 @@ function CardTerbaru({ articleNew, onClick }) {
           Terbaru
         </span>
       </div>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <Typography
-          className="text-base md:text-5xl font-bold"
+          className=" text-3xl md:text-5xl font-bold"
           text={
             articleNew?.articleTitle.length < 75
               ? articleNew?.articleTitle
@@ -44,7 +44,7 @@ function CardTerbaru({ articleNew, onClick }) {
         />
         <Typography
           variant="category"
-          className="text-xs md:text-base mt-5 "
+          className="text-base mt-5 "
           text={
             articleNew?.articleTypeName +
             " / " +

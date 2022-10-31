@@ -56,6 +56,7 @@ function SectionPanduan(props) {
                 image={item.urlImageLong}
                 alt={item.altFeaturedFile}
                 pricing={item.pricingLevel.articlePricingId}
+                className="pb-20"
               />
             ))}
           </SlickSlider>
