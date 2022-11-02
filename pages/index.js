@@ -17,7 +17,7 @@ function Home() {
   return (
     <Layout title="Beranda">
       <SectionSearch />
-      {/* <SectionCategory className="mt-8" />   */}
+      <SectionCategory className="mt-8" />
       <SectionPas />
       <SectionHits title="Yang Lagi Hits!" data={hits} link="yang-lagi-hits" />
       <hr />

@@ -10,9 +10,9 @@ function SectionSearch() {
   ];
 
   return (
-    <section className=" pt-14 md:pt-28 flex flex-col justify-center items-center text-center">
+    <section className=" pt-8 px-4 md:px-0 md:pt-28 flex flex-col justify-center items-center text-center">
       <AnimatePulse name="section search" interval={250}>
-        <h1 className=" hidden md:flex text-xl md:text-5xl font-bold tracking-tight md:leading-[3.5rem]">
+        <h1 className=" hidden md:block text-xl md:text-5xl font-bold tracking-tight md:leading-[3.5rem]">
           {title[0]}
           <br /> {title[1]}
           <br /> {title[2]}

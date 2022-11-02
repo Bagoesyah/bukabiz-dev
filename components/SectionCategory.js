@@ -21,7 +21,10 @@ function SectionCategory(props) {
         isLoading={isLoading ? isLoading : isError ? true : false}
         // isLoading={true}
       >
-        <SlickSlider slidesToScroll={3} className="mx-7 mt-4 slider-category">
+        <SlickSlider
+          slidesToScroll={3}
+          className="mx-2 md:mx-7 mt-4 slider-category"
+        >
           {isData?.data?.items.map((item) => (
             <ItemCategory
               key={item.articleCategoryId}

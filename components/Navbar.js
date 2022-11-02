@@ -17,6 +17,7 @@ function Navbar() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalForgot, setModalForgot] = useState(false);
   const [member, setMember] = useState(null);
+  const [navMobile, setNavMobile] = useState(false);
 
   const menu = ["`how to`", "panduan bisnis", "peluang bisnis", "bermitra"];
   const howTo = ["Popular Kategori", "Semua Kategori"];
@@ -109,7 +110,7 @@ function Navbar() {
     };
 
     return (
-      <div className="relative md:py-6 px-4 border-b-4 border-transparent hover:border-primary group">
+      <div className="relative pb-4 md:pb-0 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary group">
         <span className="text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
           {menu[0]}
         </span>
@@ -149,7 +150,7 @@ function Navbar() {
     const listPanduan = panduan?.isData?.data?.items;
 
     return (
-      <div className="relative py-6 px-4 border-b-4 border-transparent hover:border-primary group">
+      <div className="relative py-4 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary group">
         <span className=" text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
           {menu[1]}
         </span>
@@ -195,7 +196,7 @@ function Navbar() {
     const listBrowse = browse?.isData?.data?.items;
 
     return (
-      <div className=" relative py-6 px-4 border-b-4 border-transparent hover:border-primary group">
+      <div className=" relative py-4 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary group">
         <span className="text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
           {menu[2]}
         </span>
@@ -249,7 +250,7 @@ function Navbar() {
 
   function MenuBermitra() {
     return (
-      <div className=" relative py-6 px-4 border-b-4 border-transparent hover:border-primary ">
+      <div className=" relative py-4 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary ">
         <span className="text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
           {menu[3]}
         </span>
@@ -257,71 +258,156 @@ function Navbar() {
     );
   }
 
+  const handleNavbar = () => {
+    setNavMobile(!navMobile);
+  };
+
   return (
     <>
-      <nav>
-        <div className="nav-container">
+      <nav
+        className={`transition-all duration-1000 sticky top-0 left-0 right-0 bg-white w-full py-5 md:py-2 ${
+          navMobile ? `h-screen` : ""
+        }`}
+      >
+        <div
+          className={`sm:nav-container flex  w-full ${
+            navMobile
+              ? `flex-col gap-[50px]`
+              : "flex items-center justify-between"
+          }`}
+        >
           {/* Logo */}
-          <Link href="/">
-            <a className=" focus:outline-none">
-              <Logo />
-            </a>
-          </Link>
-
-          <div className="absolute md:static top-8 bg-white  w-full md:w-auto md:z-auto z-[-1] left-0">
-            {/* Menu */}
-            <div className="md:flex md:space-x-16">
-              <MenuHow />
-              <MenuPanduan />
-              <MenuPeluang />
-              <MenuBermitra />
-            </div>
-
-            <div className=" flex md:space-x-10 items-center">
-              {/* Search Column */}
-              <div className=" flex items-center space-x-2">
-                <input
-                  onClick={() => setSearch(!search)}
-                  className="hidden md:flex py-1 px-2 font-extralight text-transparent placeholder:text-right border-b border-primary focus:outline-none"
-                  placeholder="Cari aja disini"
-                />
+          <div className="flex justify-between w-full sm:w-auto sm:justify-start items-center">
+            <Link href="/" className={`${navMobile ? `` : "w-full"}`}>
+              <a className="focus:outline-none">
+                <Logo />
+              </a>
+            </Link>
+            <div className="flex md:hidden gap-2">
+              <div className={`${navMobile ? "hidden" : "flex"}`}>
                 <button onClick={() => setSearch(!search)}>
-                  <SearchYellow />
+                  {search ? (
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/75/75519.png"
+                      alt=""
+                      className="w-[20px]"
+                    />
+                  ) : (
+                    <SearchYellow />
+                  )}
                 </button>
               </div>
-
-              <div className="hidden md:flex items-center">
-                <div className=" flex items-center">
-                  {/* If Login Member */}
-                  {member && !loading ? (
-                    <Link href={`/profil/detail`}>
-                      <span className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 text-right truncate hover:underline">
-                        Hi! {member.name.split("@")[0]}
-                      </span>
-                    </Link>
+              {/* hamburger */}
+              <div className={`${search ? "hidden" : "flex"}`}>
+                <div className="flex" onClick={() => handleNavbar()}>
+                  {navMobile ? (
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/75/75519.png"
+                      alt=""
+                      className="w-[20px]"
+                    />
                   ) : (
-                    <span
-                      onClick={() => setModalLogin(!modalLogin)}
-                      className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 "
-                    >
-                      {loading ? "Loading.." : "MASUK"}
-                    </span>
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1024px-Hamburger_icon.svg.png"
+                      alt=""
+                      className="w-[25px]"
+                    />
                   )}
-                  <Image src={Language} alt="Language" width={20} height={20} />
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Say Hi */}
+          {navMobile && (
+            <div className="flex">
+              {member && !loading ? (
+                <Link href={`/profil/detail`}>
+                  <span className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 text-right truncate hover:underline">
+                    Hi! {member.name.split("@")[0]}
+                  </span>
+                </Link>
+              ) : (
+                <span
+                  onClick={() => setModalLogin(!modalLogin)}
+                  className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 "
+                >
+                  {loading ? "Loading.." : "MASUK"}
+                </span>
+              )}
+            </div>
+          )}
+          {/* Menu */}
+          <div
+            className={`${
+              navMobile
+                ? "flex flex-col w-full font-bold"
+                : "hidden md:flex md:gap-[50px]"
+            }`}
+          >
+            <MenuHow />
+            <MenuPanduan />
+            <MenuPeluang />
+            <MenuBermitra />
+          </div>
+
+          <div className="hidden sm:flex md:space-x-10 gap-4 h-full">
+            {/* Search Column */}
+            <div className=" md:flex items-center space-x-2">
+              <input
+                onClick={() => setSearch(!search)}
+                className="hidden md:flex py-1 px-2 font-extralight text-transparent placeholder:text-right border-b border-primary focus:outline-none"
+                placeholder="Cari aja disini"
+              />
+              <button onClick={() => setSearch(!search)}>
+                <SearchYellow />
+              </button>
+            </div>
+            <div className="hidden md:flex items-center">
+              <div className=" flex items-center">
+                {/* If Login Member */}
+                {member && !loading ? (
+                  <Link href={`/profil/detail`}>
+                    <span className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 text-right truncate hover:underline">
+                      Hi! {member.name.split("@")[0]}
+                    </span>
+                  </Link>
+                ) : (
+                  <span
+                    onClick={() => setModalLogin(!modalLogin)}
+                    className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 "
+                  >
+                    {loading ? "Loading.." : "MASUK"}
+                  </span>
+                )}
+                <Image src={Language} alt="Language" width={20} height={20} />
+              </div>
+            </div>
+          </div>
+          {navMobile && (
+            <div className="flex items-end h-full">
+              <Image
+                src={Language}
+                alt="Language"
+                width={20}
+                height={20}
+              ></Image>
+              <span className="ml-2">English</span>
+            </div>
+          )}
         </div>
       </nav>
-
       <div
         onClick={() => setSearch(false)}
         className={` ${
           !search ? " -top-full" : "top-0"
-        } fixed bg-black/50 backdrop-opacity-95 w-full h-full z-30 transition-all `}
+        } fixed bg-black/50 backdrop-opacity-95 w-full h-full z-10 mt-5 transition-all`}
       >
-        <SearchTop search={search} data={categorySearch} />
+        <SearchTop
+          search={search}
+          data={categorySearch}
+          className="flex flex-col"
+        />
       </div>
 
       {modalLogin && (
