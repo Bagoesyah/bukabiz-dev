@@ -57,7 +57,7 @@ function SearchWithType({ className, onChange }) {
       />
       {keyword && (
         <div
-          className="absolute right-44 cursor-pointer"
+          className="absolute right-28 md:right-44 cursor-pointer"
           onClick={() => setKeyword("")}
         >
           <Clear />

@@ -15,14 +15,14 @@ function SearchTop({ search, data }) {
           placeholder="Cari"
         />
         <button className=" md:pt-6">
-          <ArrowElbowDownLeft />
+          <ArrowElbowDownLeft sizes="(max-width: 768px) 10px" />
         </button>
       </div>
       <div className=" md:flex">
         <div className=" text-center md:text-left mb-4 md:mb-0 font-bold mr-6 text-black opacity-70">
           Popular search
         </div>
-        <div className="grid grid-cols-2 gap-2 items-center">
+        <div className="grid grid-cols-2 gap-2 justify-center items-center">
           {data &&
             data.map((row, index) => (
               <div

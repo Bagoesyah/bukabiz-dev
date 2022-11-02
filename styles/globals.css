@@ -79,7 +79,19 @@ nav {
 }
 
 .desc-card {
-  @apply text-sm text-gray-500;
+  @apply text-sm  text-gray-500;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.desc-card-mobile {
+  @apply text-sm  text-gray-500;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .btn-rounded {
