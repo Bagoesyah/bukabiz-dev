@@ -24,7 +24,7 @@ function Typography({ text, variant, paragraph, className }) {
           : variant === "title-card-pas"
           ? "text-base md:text-xl font-bold leading-tight"
           : variant === "card"
-          ? " text-base md:text-2xl font-bold tracking-tighter"
+          ? "text-base md:text-2xl font-bold tracking-tighter"
           : variant === "detail"
           ? "text-5xl font-extrabold tracking-tight"
           : variant === "item"

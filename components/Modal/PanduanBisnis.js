@@ -1,10 +1,10 @@
-import ButtonClose from "../ButtonClose"
-import Typography from "../Typography"
-import ICUsers from "@assets/Users.svg"
-import ICExport from "@assets/Export.svg"
-import ICBookmarkSimple from "@assets/BookmarkSimple.svg"
-import ButtonWithIcon from "../ButtonWithIcon"
-import PlayerContainer from "../PlayerContainer"
+import ButtonClose from "../ButtonClose";
+import Typography from "../Typography";
+import ICUsers from "@assets/Users.svg";
+import ICExport from "@assets/Export.svg";
+import ICBookmarkSimple from "@assets/BookmarkSimple.svg";
+import ButtonWithIcon from "../ButtonWithIcon";
+import PlayerContainer from "../PlayerContainer";
 
 function PanduanBisnis(props) {
   const {
@@ -15,8 +15,8 @@ function PanduanBisnis(props) {
     authorName,
     featuredFilePreview,
     urlImageLong,
-    onClick
-  } = props
+    onClick,
+  } = props;
 
   return (
     <div
@@ -35,19 +35,20 @@ function PanduanBisnis(props) {
           />
           <div className=" space-y-3 w-[41rem] p-2 mt-4">
             <div className=" flex justify-between items-center">
-              <div className=" text-xs font-semibold uppercase bg-gray-300 p-1 px-2 rounded">{businessStageName.title}</div>
+              <div className=" text-xs font-semibold uppercase bg-gray-300 p-1 px-2 rounded">
+                {businessStageName.title}
+              </div>
               <div className=" flex space-x-3">
                 <ICExport className="text-xl" />
                 <ICBookmarkSimple />
               </div>
             </div>
-            <Typography
-              text={articleTitle}
-              className="text-2xl opacity-80"
-            />
+            <Typography text={articleTitle} className="text-2xl opacity-80" />
             <div className=" flex space-x-3 items-center">
               <ICUsers />
-              <div className=" text-primary text-xs font-medium uppercase">{authorName}</div>
+              <div className=" text-primary text-xs font-medium uppercase">
+                {authorName}
+              </div>
             </div>
             <div className=" flex space-x-4">
               <div className="w-[23rem]">
@@ -77,6 +78,6 @@ function PanduanBisnis(props) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-export default PanduanBisnis
+export default PanduanBisnis;

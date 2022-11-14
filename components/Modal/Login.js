@@ -244,7 +244,7 @@ const Login = (props) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className=" bg-white w-11/12 h-3/4 md:w-4/6 md:h-5/6 rounded-xl relative"
+        className=" bg-white w-11/12 h-4/5 md:w-4/6 md:h-5/6 rounded-xl relative"
       >
         <ButtonClose onClick={props.onClick} />
         <div className="md:grid md:grid-cols-2 h-full">
@@ -317,7 +317,7 @@ const Login = (props) => {
                   </div>
                 </div>
                 <p
-                  className="py-8 text-center underline cursor-pointer text-xs"
+                  className=" mb-32 md:mb-0 md:py-8 text-center underline cursor-pointer text-xs"
                   onClick={props.openModalForgot}
                 >
                   Lupa kata sandi?
@@ -333,17 +333,18 @@ const Login = (props) => {
                 </div>
               </div>
             ) : step === "2" ? (
-              <div className="flex flex-col justify-center mt-3 items-center w-full h-full">
+              <div className="flex flex-col justify-center md:mt-3 items-center w-full h-full">
                 {categories ? (
-                  <div className="flex flex-col px-8">
+                  <div className="flex flex-col px-4 md:px-8">
                     <p className="text-center mb-4">
-                      Selangkah lagi! Hampir selesai. Sekarang kamu bisa <br />
+                      Selangkah lagi! Hampir selesai. Sekarang kamu bisa{" "}
+                      <br className="hidden md:block" />
                       pilih <b>preferensi bisnis</b> yang kamu suka di sini.
                     </p>
                     <small className="text-neutral-400 mb-2 text-center">
                       Level pemahamanmu soal bisnis
                     </small>
-                    <div className="grid grid-cols-4 gap-1 mb-3 whitespace-nowrap cursor-pointer text-slate-900  text-xs text-center">
+                    <div className=" flex flex-wrap justify-center md:grid md:grid-cols-4 gap-1 mb-3 whitespace-nowrap cursor-pointer text-slate-900 text-xs text-center">
                       <div
                         className={`${
                           knowledgeLevel === 1 && "bg-primary "
@@ -377,12 +378,12 @@ const Login = (props) => {
                         Mahir
                       </div>
                     </div>
-                    <div className="border border-slate-200 w-full my-6" />
+                    <div className="border border-slate-200 w-full my-2 md:my-6" />
                     <small className="text-neutral-400 mb-4 text-center">
                       Kamu bisa memilih minimal 3 kategori lho.{" "}
                     </small>
                     <div className="overflow-y-auto h-72 preferensi-scroll">
-                      <div className="grid grid-cols-4 gap-1 mb-3">
+                      <div className="grid grid-cols-3 md:grid-cols-4 gap-1 mb-3">
                         {listCategories?.data?.items.map((list) => (
                           <div
                             className=" p-2"

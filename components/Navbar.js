@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 
 import { SearchTop, Typography } from "@components/index";
 import { Login, ResetPassword } from "@components/Modal/index";
@@ -9,56 +9,101 @@ import { getCookie, decompress } from "@library/useUtils";
 
 import Logo from "@assets/Logo.svg";
 import SearchYellow from "@assets/SearchYellow.svg";
+import ICHamburger from "@assets/Hamburger.svg";
+import ICTimes from "@assets/Times.svg";
+import ICArrowUpGrey from "@assets/ArrowUpGrey.svg";
+import ICArrowDownGrey from "@assets/ArrowDownGrey.svg";
 import Language from "@assets/Language.png";
 
 function Navbar() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(false);
+  const [navbar, setNavbar] = useState(false);
   const [modalLogin, setModalLogin] = useState(false);
   const [modalForgot, setModalForgot] = useState(false);
   const [member, setMember] = useState(null);
-  const [navMobile, setNavMobile] = useState(false);
 
-  const menu = ["`how to`", "panduan bisnis", "peluang bisnis", "bermitra"];
-  const howTo = ["Popular Kategori", "Semua Kategori"];
-  const peluang = [
+  const [menu, setMenu] = useState([
     {
       id: 1,
-      title: "Semua Kategori",
-      menu: [
-        "Otomotif",
-        "Bisnis Jasa/ Agensi",
-        "Furniture & Properti",
-        "Pendidikan, Kursus, Pelatihan",
-        "Hiburan & Hobi",
-        "Penginapan & Travel",
-        "Komputer & Teknologi",
-        "Kuliner, Makanan & Minuman",
-        "Laundry & Jasa Kebersihan",
-        "Kesehatan & Kecantikan",
-        "Ibu, Anak & Balita",
-        "Retail & Minimarket",
-        "Pertanian & Peternakan",
-        "Keuangan & Asuransi ",
-        "Produk & Layanan Digital",
-        "Lain - Lain",
+      name: "`how to`",
+      isShow: false,
+      subMenu: [
+        {
+          id: 1,
+          name: "popular kategori",
+          isShow: false,
+        },
+        {
+          id: 2,
+          name: "semua kategori",
+          isShow: false,
+        },
       ],
     },
     {
       id: 2,
-      name: "Browse Kategori",
-      menu: ["Konsep Bisnis", "Business Opportunity", "Lisensi", "Franchise"],
+      name: "panduan bisnis",
+      isShow: false,
+      subMenu: [
+        {
+          id: 1,
+          name: "idea & plan",
+          isShow: false,
+        },
+        {
+          id: 2,
+          name: "how to start",
+          isShow: false,
+        },
+        {
+          id: 3,
+          name: "how to make profit",
+          isShow: false,
+        },
+        {
+          id: 4,
+          name: "how to systemize",
+          isShow: false,
+        },
+      ],
     },
-  ];
-  const categorySearch = [
-    "roasting kopi",
-    "panggang roti",
-    "adonan croissant",
-    "franchise menantea",
-  ];
+    {
+      id: 3,
+      name: "peluang bisnis",
+      isShow: false,
+      subMenu: [
+        {
+          id: 1,
+          name: "semua kategori",
+          isShow: false,
+        },
+        {
+          id: 2,
+          name: "browse kategori",
+          isShow: false,
+        },
+      ],
+    },
+    {
+      id: 4,
+      name: "bermitra",
+      isShow: false,
+      subMenu: [],
+    },
+  ]);
 
   const all = useGet("v1/category/fetch", { params: { limit: 100 } });
   const listAll = all?.isData?.data?.items;
+
+  const popular = useGet("v1/category/terpopuler");
+  const listPopular = popular?.isData?.data?.items;
+
+  const panduan = useGet("v1/article/category-panduan");
+  const listPanduan = panduan?.isData?.data?.items;
+
+  const browse = useGet("v1/browse-category/fetch");
+  const listBrowse = browse?.isData?.data?.items;
 
   const openModalForgot = () => {
     setModalForgot(!modalForgot);
@@ -71,10 +116,59 @@ function Navbar() {
     setLoading(false);
   }, []);
 
-  function MenuHow() {
-    const popular = useGet("v1/category/terpopuler");
-    const listPopular = popular?.isData?.data?.items;
+  useLayoutEffect(() => {
+    function updateSize() {
+      if (window.innerWidth > 768) setNavbar(false);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
 
+  const handleMenuShow = (id, val) => {
+    const newMenu = menu.map((obj) => {
+      if (obj.id === id) {
+        return {
+          ...obj,
+          isShow: val,
+        };
+      } else {
+        return {
+          ...obj,
+          isShow: false,
+        };
+      }
+    });
+    setMenu(newMenu);
+  };
+
+  const handleSubMenuShow = (menuId, id, val) => {
+    const newMenu = menu.map((obj) => {
+      if (obj.id === menuId) {
+        const newSubMenu = obj.subMenu.map((obj2) => {
+          if (obj2.id === id) {
+            return {
+              ...obj2,
+              isShow: val,
+            };
+          } else {
+            return {
+              ...obj2,
+              isShow: false,
+            };
+          }
+        });
+        return {
+          ...obj,
+          subMenu: newSubMenu,
+        };
+      }
+      return obj;
+    });
+    setMenu(newMenu);
+  };
+
+  function MenuHow() {
     const redirectTo = (row, type) => {
       let str = row.articleCategoryTitle.replace(/ /g, "%").toLowerCase();
       return (
@@ -110,12 +204,12 @@ function Navbar() {
     };
 
     return (
-      <div className="relative pb-4 md:pb-0 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary group">
+      <div className="relative py-6 px-4 border-b-4 border-transparent hover:border-primary group">
         <span className="text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
-          {menu[0]}
+          {menu[0].name}
         </span>
         <div className=" absolute p-8 px-12 bg-white mt-7 border-t-2 border-primary rounded-b-xl drop-shadow-xl hidden flex-col group-hover:flex w-[62rem] -left-16">
-          <Typography text={howTo[0]} variant="title" />
+          <Typography text={menu[0].subMenu[0].name} variant="title" />
           {popular.isLoading && <p>Loading..</p>}
           {popular.isError ? (
             <p className=" text-sm text-red-500">{popular.isError.message}</p>
@@ -126,7 +220,7 @@ function Navbar() {
                 .map((row) => redirectTo(row, "popular"))}
             </div>
           )}
-          <Typography text={howTo[1]} variant="title" />
+          <Typography text={menu[0].subMenu[1].name} variant="title" />
           <div className=" flex">
             {all.isLoading && <p>Loading..</p>}
             {all.isError ? (
@@ -146,13 +240,10 @@ function Navbar() {
   }
 
   function MenuPanduan() {
-    const panduan = useGet("v1/article/category-panduan");
-    const listPanduan = panduan?.isData?.data?.items;
-
     return (
-      <div className="relative py-4 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary group">
+      <div className="relative py-6 px-4 border-b-4 border-transparent hover:border-primary group">
         <span className=" text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
-          {menu[1]}
+          {menu[1].name}
         </span>
         <div className=" absolute p-8 px-12 bg-white mt-7 border-t-2 border-primary rounded-b-xl drop-shadow-xl hidden flex-col group-hover:flex w-[82rem] -left-[22rem]">
           <div className=" flex space-x-16">
@@ -192,13 +283,10 @@ function Navbar() {
   }
 
   function MenuPeluang() {
-    const browse = useGet("v1/browse-category/fetch");
-    const listBrowse = browse?.isData?.data?.items;
-
     return (
-      <div className=" relative py-4 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary group">
+      <div className=" relative py-6 px-4 border-b-4 border-transparent hover:border-primary group">
         <span className="text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
-          {menu[2]}
+          {menu[2].name}
         </span>
         <div className=" absolute bg-gray-100 mt-7 border-t-2 border-primary rounded-b-xl drop-shadow-xl w-[60rem] -left-52 hidden group-hover:flex">
           {all.isLoading && <p>Loading..</p>}
@@ -208,38 +296,54 @@ function Navbar() {
             <>
               <div className=" panduan-container bg-white rounded-bl-xl">
                 {listAll?.slice(0, 8).map((item) => (
-                  <Typography
+                  <Link
                     key={item.articleCategoryId}
-                    text={item.articleCategoryTitle}
-                    variant="item"
-                  />
+                    href={`/peluang-bisnis?category=${item.articleCategoryId}`}
+                  >
+                    <div>
+                      <Typography
+                        text={item.articleCategoryTitle}
+                        variant="item"
+                      />
+                    </div>
+                  </Link>
                 ))}
               </div>
               <div className=" panduan-container bg-white">
                 {listAll?.slice(9, 17).map((item) => (
-                  <Typography
+                  <Link
                     key={item.articleCategoryId}
-                    text={item.articleCategoryTitle}
-                    variant="item"
-                  />
+                    href={`/peluang-bisnis?category=${item.articleCategoryId}`}
+                  >
+                    <div>
+                      <Typography
+                        text={item.articleCategoryTitle}
+                        variant="item"
+                      />
+                    </div>
+                  </Link>
                 ))}
               </div>
             </>
           )}
           <div className=" panduan-container ">
-            <div className=" py-2 text-base text-primary">
-              {peluang[1].name}
-            </div>
+            <div className=" py-2 text-base text-primary">Browse Kategori</div>
             {browse.isLoading && <p>Loading..</p>}
             {browse.isError ? (
               <p className=" text-sm text-red-500">{browse.isError.message}</p>
             ) : (
               listBrowse?.map((item) => (
-                <Typography
+                <Link
                   key={item.browseCategoryId}
-                  text={item.browseCategoryTitle}
-                  variant="item"
-                />
+                  href={`/peluang-bisnis?browse=${item.browseCategoryId}`}
+                >
+                  <div>
+                    <Typography
+                      text={item.browseCategoryTitle}
+                      variant="item"
+                    />
+                  </div>
+                </Link>
               ))
             )}
           </div>
@@ -250,119 +354,66 @@ function Navbar() {
 
   function MenuBermitra() {
     return (
-      <div className=" relative py-4 md:py-6 md:px-4 border-b-4 border-transparent hover:border-primary ">
+      <div className=" relative py-6 px-4 border-b-4 border-transparent hover:border-primary ">
         <span className="text-xs font-extrabold opacity-70 uppercase hover:cursor-pointer">
-          {menu[3]}
+          {menu[3].name}
         </span>
       </div>
     );
   }
 
-  const handleNavbar = () => {
-    setNavMobile(!navMobile);
-  };
-
   return (
     <>
-      <nav
-        className={`transition-all duration-1000 sticky top-0 left-0 right-0 bg-white w-full py-5 md:py-2 ${
-          navMobile ? `h-screen` : ""
-        }`}
-      >
-        <div
-          className={`sm:nav-container flex  w-full ${
-            navMobile
-              ? `flex-col gap-[50px]`
-              : "flex items-center justify-between"
-          }`}
-        >
+      <nav className=" p-4 border-b md:p-0 md:border-none">
+        <div className=" nav-container ">
           {/* Logo */}
-          <div className="flex justify-between w-full sm:w-auto sm:justify-start items-center">
-            <Link href="/" className={`${navMobile ? `` : "w-full"}`}>
-              <a className="focus:outline-none">
-                <Logo />
-              </a>
-            </Link>
-            <div className="flex md:hidden gap-2">
-              <div className={`${navMobile ? "hidden" : "flex"}`}>
-                <button onClick={() => setSearch(!search)}>
-                  {search ? (
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/75/75519.png"
-                      alt=""
-                      className="w-[20px]"
-                    />
-                  ) : (
-                    <SearchYellow />
-                  )}
-                </button>
-              </div>
-              {/* hamburger */}
-              <div className={`${search ? "hidden" : "flex"}`}>
-                <div className="flex" onClick={() => handleNavbar()}>
-                  {navMobile ? (
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/75/75519.png"
-                      alt=""
-                      className="w-[20px]"
-                    />
-                  ) : (
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1024px-Hamburger_icon.svg.png"
-                      alt=""
-                      className="w-[25px]"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          <Link href="/">
+            <a className=" focus:outline-none">
+              <Logo />
+            </a>
+          </Link>
 
-          {/* Say Hi */}
-          {navMobile && (
-            <div className="flex">
-              {member && !loading ? (
-                <Link href={`/profil/detail`}>
-                  <span className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 text-right truncate hover:underline">
-                    Hi! {member.name.split("@")[0]}
-                  </span>
-                </Link>
-              ) : (
-                <span
-                  onClick={() => setModalLogin(!modalLogin)}
-                  className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 "
-                >
-                  {loading ? "Loading.." : "MASUK"}
-                </span>
-              )}
-            </div>
-          )}
           {/* Menu */}
-          <div
-            className={`${
-              navMobile
-                ? "flex flex-col w-full font-bold"
-                : "hidden md:flex md:gap-[50px]"
-            }`}
-          >
+          <div className="hidden md:flex space-x-16">
             <MenuHow />
             <MenuPanduan />
             <MenuPeluang />
             <MenuBermitra />
           </div>
 
-          <div className="hidden sm:flex md:space-x-10 gap-4 h-full">
+          <div className=" flex space-x-10 items-center">
             {/* Search Column */}
-            <div className=" md:flex items-center space-x-2">
+            <div className=" flex items-center space-x-4 md:space-x-2">
               <input
                 onClick={() => setSearch(!search)}
-                className="hidden md:flex py-1 px-2 font-extralight text-transparent placeholder:text-right border-b border-primary focus:outline-none"
+                className=" py-1 px-2 font-extralight text-transparent placeholder:text-right border-b border-primary focus:outline-none hidden md:flex"
                 placeholder="Cari aja disini"
               />
-              <button onClick={() => setSearch(!search)}>
-                <SearchYellow />
-              </button>
+              {!navbar && !search ? (
+                <>
+                  <button onClick={() => setSearch(!search)}>
+                    <SearchYellow />
+                  </button>
+                  <button
+                    className=" md:hidden"
+                    onClick={() => setNavbar(true)}
+                  >
+                    <ICHamburger />
+                  </button>
+                </>
+              ) : (
+                <button
+                  className=" md:hidden"
+                  onClick={() => {
+                    setSearch(false);
+                    setNavbar(false);
+                  }}
+                >
+                  <ICTimes />
+                </button>
+              )}
             </div>
+
             <div className="hidden md:flex items-center">
               <div className=" flex items-center">
                 {/* If Login Member */}
@@ -384,30 +435,180 @@ function Navbar() {
               </div>
             </div>
           </div>
-          {navMobile && (
-            <div className="flex items-end h-full">
-              <Image
-                src={Language}
-                alt="Language"
-                width={20}
-                height={20}
-              ></Image>
-              <span className="ml-2">English</span>
-            </div>
-          )}
         </div>
       </nav>
+
       <div
         onClick={() => setSearch(false)}
         className={` ${
-          !search ? " -top-full" : "top-0"
-        } fixed bg-black/50 backdrop-opacity-95 w-full h-full z-10 mt-5 transition-all`}
+          !search ? " -top-full" : "top-16 md:top-0"
+        } fixed bg-black/50 backdrop-opacity-95 w-full h-full z-30 transition-all `}
       >
         <SearchTop
           search={search}
-          data={categorySearch}
-          className="flex flex-col"
+          data={listPopular}
+          onClick={() => setSearch(false)}
         />
+      </div>
+
+      <div
+        // onClick={() => setNavbar(false)}
+        className={` ${
+          !navbar ? " -top-full" : "top-16 md:top-0"
+        } fixed bg-white backdrop-opacity-95 w-full h-full z-30 transition-all`}
+      >
+        {navbar ? (
+          <div className=" p-4 md:p-8 flex flex-col justify-between h-full">
+            <div className=" w-full">
+              <span
+                onClick={() => setModalLogin(!modalLogin)}
+                className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 "
+              >
+                {loading ? "Loading.." : "MASUK"}
+              </span>
+              {/* <div className=" text-2xl text-black opacity-75 font-bold">
+                Hi, Queena
+              </div> */}
+              <div className=" mt-8 space-y-5">
+                {menu.map((m, idx) => (
+                  <>
+                    <div
+                      key={m.id}
+                      className=" font-bold uppercase items-center flex justify-between"
+                      onClick={() => handleMenuShow(m.id, !m.isShow)}
+                    >
+                      {m.name}
+                      {m.isShow ? <ICArrowUpGrey /> : <ICArrowDownGrey />}
+                    </div>
+                    {m.isShow ? (
+                      <div className=" space-y-3">
+                        {m.subMenu.map((sb, idx2) => (
+                          <>
+                            <div
+                              key={sb.id}
+                              className=" capitalize text-primary font-medium"
+                              onClick={() =>
+                                handleSubMenuShow(m.id, sb.id, !sb.isShow)
+                              }
+                            >
+                              {sb.name}
+                            </div>
+                            {idx === 0 && idx2 === 0 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listPopular?.slice(0, 4).map((im) => (
+                                  <div
+                                    key={im.articleCategoryId}
+                                    className="text-sm"
+                                  >
+                                    {im.articleCategoryTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                            {idx === 0 && idx2 === 1 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listAll?.slice(0, 16).map((im) => (
+                                  <div
+                                    key={im.articleCategoryId}
+                                    className="text-sm"
+                                  >
+                                    {im.articleCategoryTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
+                            {idx === 1 && idx2 === 0 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listPanduan[0].articleList?.map((im) => (
+                                  <div
+                                    key={im.article_id}
+                                    className="text-sm truncate"
+                                  >
+                                    {im.articleTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
+                            {idx === 1 && idx2 === 1 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listPanduan[1].articleList?.map((im) => (
+                                  <div
+                                    key={im.article_id}
+                                    className="text-sm truncate"
+                                  >
+                                    {im.articleTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
+                            {idx === 1 && idx2 === 2 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listPanduan[2].articleList?.map((im) => (
+                                  <div
+                                    key={im.article_id}
+                                    className="text-sm truncate"
+                                  >
+                                    {im.articleTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
+                            {idx === 1 && idx2 === 3 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listPanduan[3].articleList?.map((im) => (
+                                  <div
+                                    key={im.article_id}
+                                    className="text-sm truncate"
+                                  >
+                                    {im.articleTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
+                            {idx === 2 && idx2 === 0 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listAll.slice(0, 16).map((im) => (
+                                  <div
+                                    key={im.articleCategoryId}
+                                    className="text-sm truncate"
+                                  >
+                                    {im.articleCategoryTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
+                            {idx === 2 && idx2 === 1 && sb.isShow ? (
+                              <div className=" ml-5 space-y-2">
+                                {listBrowse.map((im) => (
+                                  <div
+                                    key={im.browseCategoryId}
+                                    className="text-sm truncate"
+                                  >
+                                    {im.browseCategoryTitle}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                          </>
+                        ))}
+                      </div>
+                    ) : null}
+                  </>
+                ))}
+              </div>
+            </div>
+            <button className=" flex items-center space-x-2 mb-16">
+              <Image src={Language} alt="Language" width={20} height={20} />
+              <span>English</span>
+            </button>
+          </div>
+        ) : null}
       </div>
 
       {modalLogin && (

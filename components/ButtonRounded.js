@@ -6,7 +6,9 @@ function ButtonRounded({ variant, link }) {
     <>
       {variant === "semua" ? (
         <Link href={link}>
-          <button className={` btn-rounded `}>Lihat Semua</button>
+          <button className={` btn-rounded whitespace-nowrap`}>
+            Lihat Semua
+          </button>
         </Link>
       ) : variant === "filter" ? (
         <button className={` btn-rounded flex items-center`}>
@@ -15,7 +17,7 @@ function ButtonRounded({ variant, link }) {
         </button>
       ) : (
         <Link href={link}>
-          <button className=" btn-rounded-panduan font-bold ">
+          <button className=" btn-rounded-panduan font-bold">
             Lihat Panduan
           </button>
         </Link>

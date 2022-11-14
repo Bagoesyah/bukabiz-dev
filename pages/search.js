@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react"
-import { useRouter } from "next/router"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { axiosGet } from "@library/useAxios";
-import { usePost } from "@library/useAPI"
+import { usePost } from "@library/useAPI";
 import {
   Layout,
   SearchWithType,
@@ -13,24 +13,24 @@ import {
   CardPanduan,
   CardPeluangAlternatif,
   ButtonWide,
-  Modal
-} from "@components/index"
-import AnimatePulse from "@components/Loading/AnimatePulse"
-import MungkinSuka from "@components/DetailList/MungkinSuka"
+  Modal,
+} from "@components/index";
+import AnimatePulse from "@components/Loading/AnimatePulse";
+import MungkinSuka from "@components/DetailList/MungkinSuka";
 
 function Search() {
-  const router = useRouter()
-  const [page, setPage] = useState(1)
-  const [loadMore, setLoadMore] = useState(false)
-  const [listArticle, setListArticle] = useState([])
+  const router = useRouter();
+  const [page, setPage] = useState(1);
+  const [loadMore, setLoadMore] = useState(false);
+  const [listArticle, setListArticle] = useState([]);
 
-  const [keyword, setKeyword] = useState('')
-  const [type, setType] = useState(1)
-  const [url, setUrl] = useState('v1/article/how-to')
-  const [popup, setPopup] = useState(false)
-  const [data, setData] = useState({})
-  
-  const [triggerSearch, setTriggerSearch] = useState(false)
+  const [keyword, setKeyword] = useState("");
+  const [type, setType] = useState(1);
+  const [url, setUrl] = useState("v1/article/how-to");
+  const [popup, setPopup] = useState(false);
+  const [data, setData] = useState({});
+
+  const [triggerSearch, setTriggerSearch] = useState(false);
   // const [typeList, setTypeList] = useState([
   //   {
   //     id: 1,
@@ -46,84 +46,91 @@ function Search() {
   //   }
   // ])
 
-  const length = [1, 2, 3, 4, 5, 6, 7, 8]
+  const length = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  const {
-    isData,
-    isLoading,
-    isError
-  } = usePost(
-    url,
-    {
-      params: {
-        page: page,
-        limit: 8,
-        keyword: keyword,
-        triggerSearch: triggerSearch,
-      }
-    })
-  const dataArticle = isData?.data
+  const { isData, isLoading, isError } = usePost(url, {
+    params: {
+      page: page,
+      limit: 8,
+      keyword: keyword,
+      triggerSearch: triggerSearch,
+    },
+  });
+  const dataArticle = isData?.data;
 
   useEffect(() => {
     if (isData === undefined || !isData || isData.length === 0) {
       // no action
     } else if (loadMore) {
-      let newListArticle = listArticle.concat(isData.data.items)
-      setListArticle(newListArticle)
-      setLoadMore(false)
+      let newListArticle = listArticle.concat(isData.data.items);
+      setListArticle(newListArticle);
+      setLoadMore(false);
     } else {
-      setListArticle(isData.data.items)
+      setListArticle(isData.data.items);
     }
-  }, [isData])
+  }, [isData]);
 
   useEffect(() => {
     if (router.query.keyword) {
-      let aType = router.query.type
-      let newUrl = aType == 1 ? 'v1/article/how-to' : aType == 2 ? 'v1/article/panduan-bisnis' : 'v1/article/peluang-bisnis'
-      setType(aType)
-      setUrl(newUrl)
-      setKeyword(router.query.keyword)
+      let aType = router.query.type;
+      let newUrl =
+        aType == 1
+          ? "v1/article/how-to"
+          : aType == 2
+          ? "v1/article/panduan-bisnis"
+          : "v1/article/peluang-bisnis";
+      setType(aType);
+      setUrl(newUrl);
+      setKeyword(router.query.keyword);
     }
-  }, [router])
+  }, [router]);
 
   const handleClick = (id, featured) => {
-    if (featured === 'image' && type == 1) {
-      router.push(`/article/${id}`)
+    if (featured === "image" && type == 1) {
+      router.push(`/article/${id}`);
     } else {
       axiosGet(
         `v1/article/pop-up/${id}`,
         {
           headers: {
             // Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
         },
-        success => {
-          setData(success.data.data)
-          setPopup(true)
+        (success) => {
+          setData(success.data.data);
+          setPopup(true);
         },
-        error => {
+        (error) => {
           console.log(error);
         }
-      )
+      );
     }
   };
 
-  const handleChangeType = (val) => {    
-    let newUrl = val == 1 ? 'v1/article/how-to' : val == 2 ? 'v1/article/panduan-bisnis' : 'v1/article/peluang-bisnis'    
-    setUrl(newUrl)
-    setType(val)
-    setTriggerSearch(!triggerSearch)
-  }
+  const handleChangeType = (val) => {
+    let newUrl =
+      val == 1
+        ? "v1/article/how-to"
+        : val == 2
+        ? "v1/article/panduan-bisnis"
+        : "v1/article/peluang-bisnis";
+    setUrl(newUrl);
+    setType(val);
+    setTriggerSearch(!triggerSearch);
+  };
 
   return (
     <>
-      <Layout title="Pencarian" >
+      <Layout title="Pencarian">
         <div className=" relative bg-gray-100 flex justify-center pt-28 ">
-          <SearchWithType className=" absolute top-8" onChange={handleChangeType} />
+          <SearchWithType
+            className=" absolute top-8"
+            onChange={handleChangeType}
+          />
         </div>
         <TitleDetail
-          title={'`' + keyword + '`'}
+          title={"`" + keyword + "`"}
           count={dataArticle?.items.length}
         />
         <hr />
@@ -137,7 +144,7 @@ function Search() {
             >
               {listArticle?.length > 0 && (
                 <div className=" grid grid-cols-4 gap-4 gap-y-8 mt-4">
-                  {listArticle?.map(row => (
+                  {listArticle?.map((row) => (
                     <CardHitsFlat
                       key={row.articleId}
                       title={row.articleTitle}
@@ -153,7 +160,7 @@ function Search() {
             </AnimatePulse>
           ) : type == 2 ? (
             <div className=" grid grid-cols-4 gap-4">
-              {listArticle?.map(item => (
+              {listArticle?.map((item) => (
                 <CardPanduan
                   key={item.articleId}
                   articleId={item.articleId}
@@ -170,7 +177,7 @@ function Search() {
             </div>
           ) : (
             <div className=" grid grid-cols-4 gap-4">
-              {listArticle?.map(item => (
+              {listArticle?.map((item) => (
                 <CardPeluangAlternatif
                   key={item.articleId}
                   variant="List"
@@ -191,18 +198,16 @@ function Search() {
             <div className="flex justify-center py-4">
               {dataArticle?.page !== dataArticle?.lastPage && (
                 <ButtonWide
-                  onClick={
-                    () => {
-                      setPage(page + 1)
-                      setLoadMore(true);
-                    }
-                  }
+                  onClick={() => {
+                    setPage(page + 1);
+                    setLoadMore(true);
+                  }}
                   icon="down"
                 />
               )}
             </div>
           )}
-          {(listArticle.length === 0 && !isLoading) && <IconNotFound />}
+          {listArticle.length === 0 && !isLoading && <IconNotFound />}
         </ContainerList>
         <hr />
         <MungkinSuka />
@@ -210,11 +215,11 @@ function Search() {
       {popup && (
         <Modal
           {...data}
-          variant={type == 1 ? 'howto' : type == 2 ? 'panduan' : 'peluang'}
+          variant={type == 1 ? "howto" : type == 2 ? "panduan" : "peluang"}
           onClick={() => setPopup(false)}
         />
       )}
     </>
-  )
+  );
 }
-export default Search
+export default Search;
