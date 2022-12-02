@@ -15,10 +15,10 @@ function CardTerbaru({ articleNew, onClick }) {
 
   return (
     <div
-      className=" bg-white shadow-lg  w-full  md:shadow-xl rounded-2xl md:w-[31rem] cursor-pointer shadow-card"
+      className=" bg-white shadow-xl rounded-2xl justify-center md:w-[31rem] cursor-pointer shadow-card"
       onClick={onClick}
     >
-      <div className=" relative flex justify-center items-center">
+      <div className=" relative flex justify-center items-center ">
         <Image
           loader={loaderNew}
           src={articleNew?.urlImageSquare ?? articleNew?.urlImageSquare}
@@ -33,9 +33,9 @@ function CardTerbaru({ articleNew, onClick }) {
           Terbaru
         </span>
       </div>
-      <div className="p-4 md:p-8">
+      <div className="p-6 md:p-8">
         <Typography
-          className=" text-3xl md:text-5xl font-bold"
+          className=" text-2xl md:text-5xl font-bold"
           text={
             articleNew?.articleTitle.length < 75
               ? articleNew?.articleTitle
@@ -44,7 +44,7 @@ function CardTerbaru({ articleNew, onClick }) {
         />
         <Typography
           variant="category"
-          className="text-base mt-5 "
+          className=" mt-2 md:mt-5 "
           text={
             articleNew?.articleTypeName +
             " / " +

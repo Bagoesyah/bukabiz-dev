@@ -6,8 +6,11 @@ import { SearchTop, Typography } from "@components/index";
 import { Login, ResetPassword } from "@components/Modal/index";
 import { useGet } from "@library/useAPI";
 import { getCookie, decompress } from "@library/useUtils";
+import { useRouter } from "next/router";
+import { deleteAllCookies } from "@library/useUtils";
 
 import Logo from "@assets/Logo.svg";
+import LogoMobile from "@assets/LogoMobile.svg";
 import SearchYellow from "@assets/SearchYellow.svg";
 import ICHamburger from "@assets/Hamburger.svg";
 import ICTimes from "@assets/Times.svg";
@@ -22,6 +25,7 @@ function Navbar() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalForgot, setModalForgot] = useState(false);
   const [member, setMember] = useState(null);
+  const router = useRouter();
 
   const [menu, setMenu] = useState([
     {
@@ -108,6 +112,73 @@ function Navbar() {
   const openModalForgot = () => {
     setModalForgot(!modalForgot);
     setModalLogin(!modalLogin);
+  };
+
+  const handleLogout = () => {
+    deleteAllCookies();
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
+  function LogOut({ onClick, link, label }) {
+    return (
+      <div
+        onClick={onClick}
+        className={` font-semibold text-primary cursor-pointer mr-5  
+            ${
+              router.asPath === link
+                ? " font-semibold border-primary"
+                : "text-primary"
+            } 
+            ${label === "Keluar"} 
+            `}
+      >
+        {label}
+      </div>
+    );
+  }
+
+  // onClick={() =>
+  //   router.push(
+  //     `/category/${row.articleCategoryId}?${str}`
+  //   )
+  // }
+
+  // function menuLink() {
+  //   const router = useRouter();
+
+  //   const handleClick = (e, row) => {
+  //     e.preventDefault();
+  //     router.push(`/category/${row.articleCategoryId}?${str}`);
+  //   };
+
+  //   <div className=" ml-5 space-y-2">
+  //     {listPopular?.slice(0, 4).map((row) => {
+  //       let str = row.articleCategoryTitle.replace(/ /g, "%").toLowerCase();
+  //       return (
+  //         <handleClick
+  //           onClick={handleClick}
+  //           // href={`/category/${row.articleCategoryId}?${str}`}
+  //           key={row.articleCategoryId}
+  //         >
+  //           <div key={row.articleCategoryId} className="text-sm">
+  //             {row.articleCategoryTitle}
+  //           </div>
+  //         </handleClick>
+  //       );
+  //     })}
+  //   </div>;
+  // }
+
+  //   const MenuLink = () => {
+  // onClick={() => router.push(`/category/${row.articleCategoryId}?${str}`)}
+  //   };
+
+  // let str = row.articleCategoryTitle.replace(/ /g, "%").toLowerCase();
+  const handleClick = (CategoryId, str) => {
+    router.push(`/category/${CategoryId}?${str}`);
+    console.log(CategoryId);
   };
 
   useEffect(() => {
@@ -216,7 +287,7 @@ function Navbar() {
           ) : (
             <div className=" text-sm flex border-b py-1">
               {listPopular
-                ?.slice(0, 4)
+                ?.slice(1, 4)
                 .map((row) => redirectTo(row, "popular"))}
             </div>
           )}
@@ -362,14 +433,25 @@ function Navbar() {
     );
   }
 
+  // useEffect(() => {
+  //   console.log("test");
+  // }, []);
+
+  console.log(listPopular);
+
   return (
     <>
-      <nav className=" p-4 border-b md:p-0 md:border-none">
+      <nav className=" px-4 py-2 md:py-0 md:px-0  md:border-b md:border-none">
         <div className=" nav-container ">
           {/* Logo */}
           <Link href="/">
-            <a className=" focus:outline-none">
+            <a className=" resize focus:outline-none hidden md:block">
               <Logo />
+            </a>
+          </Link>
+          <Link href="/">
+            <a className=" focus:outline-none md:hidden">
+              <LogoMobile />
             </a>
           </Link>
 
@@ -431,7 +513,7 @@ function Navbar() {
                     {loading ? "Loading.." : "MASUK"}
                   </span>
                 )}
-                <Image src={Language} alt="Language" width={20} height={20} />
+                {/* <Image src={Language} alt="Language" width={20} height={20} /> */}
               </div>
             </div>
           </div>
@@ -460,15 +542,17 @@ function Navbar() {
         {navbar ? (
           <div className=" p-4 md:p-8 flex flex-col justify-between h-full">
             <div className=" w-full">
-              <span
-                onClick={() => setModalLogin(!modalLogin)}
-                className="text-xs font-extrabold opacity-70 cursor-pointer mr-5 "
-              >
-                {loading ? "Loading.." : "MASUK"}
-              </span>
-              {/* <div className=" text-2xl text-black opacity-75 font-bold">
-                Hi, Queena
-              </div> */}
+              {/* If Login Member */}
+              {member && !loading ? (
+                <Link href={`/profil/detail`}>
+                  <span className=" text-2xl font-bold opacity-75 cursor-pointer mr-5 text-right truncate hover:underline">
+                    Hi! {member.name.split("@")[0]}
+                  </span>
+                </Link>
+              ) : (
+                ""
+              )}
+
               <div className=" mt-8 space-y-5">
                 {menu.map((m, idx) => (
                   <>
@@ -495,103 +579,157 @@ function Navbar() {
                             </div>
                             {idx === 0 && idx2 === 0 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listPopular?.slice(0, 4).map((im) => (
-                                  <div
-                                    key={im.articleCategoryId}
-                                    className="text-sm"
-                                  >
-                                    {im.articleCategoryTitle}
-                                  </div>
-                                ))}
+                                {listPopular?.slice(0, 4).map((row) => {
+                                  let str = row.articleCategoryTitle
+                                    .replace(/ /g, "%")
+                                    .toLowerCase();
+
+                                  return (
+                                    <div
+                                      // onclick={() =>
+                                      //   // row.articleCategoryId !== 1 &&
+                                      //   handleClick(row.articleCategoryId)
+                                      // }
+                                      // href={`/category/${row.articleCategoryId}?${str}`}
+                                      key={row.articleCategoryId}
+                                    >
+                                      <div
+                                        key={row.articleCategoryId}
+                                        className="text-sm"
+                                        onclick={
+                                          row.articleCategoryId !== 1 &&
+                                          handleClick(row.articleCategoryId)
+                                        }
+                                      >
+                                        {row.articleCategoryTitle}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             ) : null}
                             {idx === 0 && idx2 === 1 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listAll?.slice(0, 16).map((im) => (
-                                  <div
-                                    key={im.articleCategoryId}
-                                    className="text-sm"
-                                  >
-                                    {im.articleCategoryTitle}
-                                  </div>
-                                ))}
+                                {listAll?.slice(0, 16).map((item) => {
+                                  let str = item.articleCategoryTitle
+                                    .replace(/ /g, "%")
+                                    .toLowerCase();
+                                  return (
+                                    <div
+                                      href={`/category/${item.articleCategoryId}?${str}`}
+                                      key={item.articleCategoryId}
+                                      onClick={() => setNavbar(false)}
+                                    >
+                                      <div
+                                        key={item.articleCategoryId}
+                                        className="text-sm"
+                                      >
+                                        {item.articleCategoryTitle}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             ) : null}
-
                             {idx === 1 && idx2 === 0 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listPanduan[0].articleList?.map((im) => (
-                                  <div
-                                    key={im.article_id}
-                                    className="text-sm truncate"
+                                {listPanduan[0].articleList?.map((item) => (
+                                  <Link
+                                    key={item.article_id}
+                                    href={`/panduan-bisnis/${item.article_id}`}
                                   >
-                                    {im.articleTitle}
-                                  </div>
+                                    <div
+                                      key={item.article_id}
+                                      className="text-sm truncate"
+                                    >
+                                      {item.articleTitle}
+                                    </div>
+                                  </Link>
                                 ))}
                               </div>
                             ) : null}
-
                             {idx === 1 && idx2 === 1 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listPanduan[1].articleList?.map((im) => (
-                                  <div
-                                    key={im.article_id}
-                                    className="text-sm truncate"
+                                {listPanduan[1].articleList?.map((item) => (
+                                  <Link
+                                    key={item.article_id}
+                                    href={`/panduan-bisnis/${item.article_id}`}
                                   >
-                                    {im.articleTitle}
-                                  </div>
+                                    <div
+                                      key={item.article_id}
+                                      className="text-sm truncate"
+                                    >
+                                      {item.articleTitle}
+                                    </div>
+                                  </Link>
                                 ))}
                               </div>
                             ) : null}
-
                             {idx === 1 && idx2 === 2 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listPanduan[2].articleList?.map((im) => (
-                                  <div
-                                    key={im.article_id}
-                                    className="text-sm truncate"
+                                {listPanduan[2].articleList?.map((item) => (
+                                  <Link
+                                    key={item.article_id}
+                                    href={`/panduan-bisnis/${item.article_id}`}
                                   >
-                                    {im.articleTitle}
-                                  </div>
+                                    <div
+                                      key={item.article_id}
+                                      className="text-sm truncate"
+                                    >
+                                      {item.articleTitle}
+                                    </div>
+                                  </Link>
                                 ))}
                               </div>
                             ) : null}
-
                             {idx === 1 && idx2 === 3 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listPanduan[3].articleList?.map((im) => (
-                                  <div
-                                    key={im.article_id}
-                                    className="text-sm truncate"
+                                {listPanduan[3].articleList?.map((item) => (
+                                  <Link
+                                    key={item.article_id}
+                                    href={`/panduan-bisnis/${item.article_id}`}
                                   >
-                                    {im.articleTitle}
-                                  </div>
+                                    <div
+                                      key={item.article_id}
+                                      className="text-sm truncate"
+                                    >
+                                      {item.articleTitle}
+                                    </div>
+                                  </Link>
                                 ))}
                               </div>
                             ) : null}
-
                             {idx === 2 && idx2 === 0 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listAll.slice(0, 16).map((im) => (
-                                  <div
-                                    key={im.articleCategoryId}
-                                    className="text-sm truncate"
+                                {listAll.slice(0, 16).map((item) => (
+                                  <Link
+                                    key={item.articleCategoryId}
+                                    href={`/peluang-bisnis?category=${item.articleCategoryId}`}
                                   >
-                                    {im.articleCategoryTitle}
-                                  </div>
+                                    <div
+                                      key={item.articleCategoryId}
+                                      className="text-sm truncate"
+                                    >
+                                      {item.articleCategoryTitle}
+                                    </div>
+                                  </Link>
                                 ))}
                               </div>
                             ) : null}
-
                             {idx === 2 && idx2 === 1 && sb.isShow ? (
                               <div className=" ml-5 space-y-2">
-                                {listBrowse.map((im) => (
-                                  <div
-                                    key={im.browseCategoryId}
-                                    className="text-sm truncate"
+                                {listBrowse.map((item) => (
+                                  <Link
+                                    key={item.browseCategoryId}
+                                    href={`/peluang-bisnis?browse=${item.browseCategoryId}`}
                                   >
-                                    {im.browseCategoryTitle}
-                                  </div>
+                                    <div
+                                      key={item.browseCategoryId}
+                                      className="text-sm truncate"
+                                    >
+                                      {item.browseCategoryTitle}
+                                    </div>
+                                  </Link>
                                 ))}
                               </div>
                             ) : null}
@@ -603,9 +741,22 @@ function Navbar() {
                 ))}
               </div>
             </div>
+
             <button className=" flex items-center space-x-2 mb-16">
-              <Image src={Language} alt="Language" width={20} height={20} />
-              <span>English</span>
+              {member && !loading ? (
+                <LogOut
+                  onClick={() => handleLogout()}
+                  link={`/`}
+                  label="KELUAR"
+                />
+              ) : (
+                <span
+                  onClick={() => setModalLogin(!modalLogin)}
+                  className=" font-semibold text-primary cursor-pointer mr-5 "
+                >
+                  {loading ? "Loading.." : "MASUK"}
+                </span>
+              )}
             </button>
           </div>
         ) : null}

@@ -8,7 +8,7 @@ import {
   SectionCategory,
   SectionPath,
   ContainerList,
-  // ButtonRounded,
+  ButtonRounded,
   ButtonWide,
   Modal,
   Typography,
@@ -57,7 +57,7 @@ function PanduanBisnis() {
     params: {
       page: page,
       limit: 8,
-      stage: filter.stage.id,
+      businessStageId: filter.stage.id,
       format: filter.format.id,
       pricing: filter.pricing.id,
       triggerSearch: triggerSearch,
@@ -85,9 +85,29 @@ function PanduanBisnis() {
   }, [isData]);
 
   useEffect(() => {
-    getDataFilter("stage", "v1/category/fetch?limit=100");
-    getDataFilter("format", "v1/category/fetch?limit=100");
-    getDataFilter("pricing", "v1/category/fetch?limit=100");
+    getDataFilter("stage", "v1/business-stage/fetch");
+    getDataFilter("pricing", "v1/pricing-category/fetch");
+    setListFilter((prevState) => {
+      return {
+        ...prevState,
+        format: {
+          items: [
+            {
+              id: "file",
+              name: "File",
+            },
+            {
+              id: "text",
+              name: "Text",
+            },
+            {
+              id: "video",
+              name: "Video",
+            },
+          ],
+        },
+      };
+    });
   }, []);
 
   const getDataFilter = (name, url) => {
@@ -150,20 +170,19 @@ function PanduanBisnis() {
 
   return (
     <Layout title="Panduan Bisnis">
-      {/* <SectionCategory /> */}
+      <SectionCategory className="border-b" />
       <SectionPath
         path={["Home", "Panduan Bisnis"]}
         title="Belajar Panduan Bisnis Dulu"
         count={isLoading ? "0" : dataArticle?.totalRows}
-        className="hidden md:flex"
       />
-      <hr />
+      <hr className="hidden md:flex" />
       <ContainerList>
-        <div className=" hidden md:flex space-x-5">
+        <div className=" hidden md:flex gap-4 md:space-x-5">
           <div className=" relative w-full">
             {!showStage ? (
               <div
-                className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                className=" w-full p-2 md:p-3 text-sm rounded border flex justify-between items-center "
                 onClick={() => {
                   setShowStage(true);
                   setShowFormat(false);
@@ -183,7 +202,7 @@ function PanduanBisnis() {
                   <ICArrowUp />
                 </div>
                 <hr />
-                <div className=" flex flex-col py-4 overflow-y-auto h-80">
+                <div className=" flex flex-col py-4 overflow-y-auto h-56">
                   <div
                     className={` 
                           text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
@@ -199,11 +218,11 @@ function PanduanBisnis() {
                   </div>
                   {listFilter?.stage?.items?.map((item) => (
                     <div
-                      key={item.articleCategoryId}
+                      key={item.businessStageId}
                       className={` 
                           text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
                           ${
-                            filter.stage.id === item.articleCategoryId
+                            filter.stage.id === item.businessStageId
                               ? "border-primary font-bold"
                               : "border-white"
                           }
@@ -211,12 +230,12 @@ function PanduanBisnis() {
                       onClick={() =>
                         handleFilter(
                           "stage",
-                          item.articleCategoryId,
-                          item.articleCategoryTitle
+                          item.businessStageId,
+                          item.businessStageTitle
                         )
                       }
                     >
-                      {item.articleCategoryTitle}
+                      {item.businessStageTitle}
                     </div>
                   ))}
                 </div>
@@ -226,7 +245,7 @@ function PanduanBisnis() {
           <div className=" relative w-full">
             {!showFormat ? (
               <div
-                className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                className=" w-full p-2 md:p-3 text-sm rounded border flex justify-between items-center "
                 onClick={() => {
                   setShowFormat(true);
                   setShowStage(false);
@@ -246,7 +265,7 @@ function PanduanBisnis() {
                   <ICArrowUp />
                 </div>
                 <hr />
-                <div className=" flex flex-col py-4 overflow-y-auto h-80">
+                <div className=" flex flex-col py-4 overflow-y-auto h-44">
                   <div
                     className={` 
                           text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
@@ -262,24 +281,18 @@ function PanduanBisnis() {
                   </div>
                   {listFilter?.format?.items?.map((item) => (
                     <div
-                      key={item.articleCategoryId}
+                      key={item.id}
                       className={` 
                           text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
                           ${
-                            filter.format.id === item.articleCategoryId
+                            filter.format.id === item.id
                               ? "border-primary font-bold"
                               : "border-white"
                           }
                           `}
-                      onClick={() =>
-                        handleFilter(
-                          "format",
-                          item.articleCategoryId,
-                          item.articleCategoryTitle
-                        )
-                      }
+                      onClick={() => handleFilter("format", item.id, item.name)}
                     >
-                      {item.articleCategoryTitle}
+                      {item.name}
                     </div>
                   ))}
                 </div>
@@ -289,7 +302,7 @@ function PanduanBisnis() {
           <div className=" relative w-full">
             {!showPricing ? (
               <div
-                className=" w-full p-3 text-sm rounded border flex justify-between items-center "
+                className=" w-full p-2 md:p-3 text-sm rounded border flex justify-between items-center "
                 onClick={() => {
                   setShowStage(false);
                   setShowFormat(false);
@@ -309,7 +322,7 @@ function PanduanBisnis() {
                   <ICArrowUp />
                 </div>
                 <hr />
-                <div className=" flex flex-col py-4 overflow-y-auto h-80">
+                <div className=" flex flex-col py-4 overflow-y-auto h-36">
                   <div
                     className={` 
                           text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
@@ -325,11 +338,11 @@ function PanduanBisnis() {
                   </div>
                   {listFilter?.pricing?.items?.map((item) => (
                     <div
-                      key={item.articleCategoryId}
+                      key={item.articlePricingId}
                       className={` 
                           text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
                           ${
-                            filter.pricing.id === item.articleCategoryId
+                            filter.pricing.id === item.articlePricingId
                               ? "border-primary font-bold"
                               : "border-white"
                           }
@@ -337,12 +350,12 @@ function PanduanBisnis() {
                       onClick={() =>
                         handleFilter(
                           "pricing",
-                          item.articleCategoryId,
-                          item.articleCategoryTitle
+                          item.articlePricingId,
+                          item.articlePricingName
                         )
                       }
                     >
-                      {item.articleCategoryTitle}
+                      {item.articlePricingName}
                     </div>
                   ))}
                 </div>
@@ -360,10 +373,8 @@ function PanduanBisnis() {
         </div>
       </ContainerList>
       <ContainerList>
-        {/* <ButtonRounded
-          variant="filter"
-        /> */}
-        <div className=" grid grid-cols-2 md:grid-cols-4 md:gap-4">
+        <ButtonRounded variant="filter" />
+        <div className=" grid grid-cols-2 md:grid-cols-4 mx-2 md:mx-0 md:gap-4">
           {listArticle?.map((item) => (
             <CardPanduan
               key={item.articleId}
@@ -396,8 +407,12 @@ function PanduanBisnis() {
       </ContainerList>
       <hr />
       <ContainerList>
-        <Typography text="Mungkin Kamu Suka" variant="card" />
-        <div className=" grid grid-cols-2 md:grid-cols-4 md:gap-4">
+        <Typography
+          text="Mungkin Kamu Suka"
+          variant="title-card"
+          className="md:text-2xl ml-4 md:ml-0"
+        />
+        <div className=" grid grid-cols-2 md:grid-cols-4 mx-2 md:mx-0 md:gap-4">
           {isDataSuka?.data?.items?.map((item) => (
             <CardSuka
               key={item.articleId}

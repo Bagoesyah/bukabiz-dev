@@ -36,7 +36,7 @@ function PlayerContainer({ urlVideo, urlThumbnail, className } = props) {
       height: '100%',
       // width: '870',
       playerVars: {
-        autoplay: 1,
+        autoplay: 0,
         fs: 0
       },
       events: {
@@ -49,7 +49,7 @@ function PlayerContainer({ urlVideo, urlThumbnail, className } = props) {
   const onPlayerReady = event => {
     // console.log("onPlayerReady", event.target);
     event.target.setVolume(100);
-    event.target.playVideo();
+    // event.target.playVideo();
     // if (handleSpace) console.log(event); // want to stop the video if space bar clicked
   };
 

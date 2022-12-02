@@ -23,7 +23,7 @@ function SectionCategory(props) {
       >
         <SlickSlider
           slidesToScroll={3}
-          className="mx-2 md:mx-7 mt-4 slider-category"
+          className=" md:mx-7 mt-2 md:mt-4 slider-category"
         >
           {isData?.data?.items.map((item) => (
             <ItemCategory

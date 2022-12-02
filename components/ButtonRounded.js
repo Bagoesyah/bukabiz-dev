@@ -11,7 +11,7 @@ function ButtonRounded({ variant, link }) {
           </button>
         </Link>
       ) : variant === "filter" ? (
-        <button className={` btn-rounded flex items-center`}>
+        <button className={` btn-rounded-filter flex items-center md:hidden`}>
           <Filter className="mr-2" />
           filters
         </button>

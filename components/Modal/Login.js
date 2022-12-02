@@ -12,6 +12,7 @@ import ICApple from "@assets/ICApple.svg";
 import ICGoogle from "@assets/ICGoogle.svg";
 import EyeOpen from "@assets/EyeOpen.svg";
 import EyeClosed from "@assets/EyeClosed.svg";
+import Link from "next/link";
 
 // step 2 To Register
 // step 3 To login
@@ -326,10 +327,10 @@ const Login = (props) => {
                   Dengan mendaftar ke Bukabiz.com, Anda menyetujui kebijakan
                   privasi Bukabiz untuk menyimpan, mengelola, dan memproses
                   informasi pribadi Anda. Untuk membaca lebih lanjut, silakan
-                  lihat{" "}
-                  <span className="text-blue-500">
-                    kebijakan privasi kami di sini.
-                  </span>
+                  lihat 
+                  <Link href={`/kebijakan-privasi`}>
+                    <span className="text-blue-500 hover:underline cursor-pointer">  kebijakan privasi kami di sini. </span>
+                  </Link>
                 </div>
               </div>
             ) : step === "2" ? (
@@ -337,7 +338,7 @@ const Login = (props) => {
                 {categories ? (
                   <div className="flex flex-col px-4 md:px-8">
                     <p className="text-center mb-4">
-                      Selangkah lagi! Hampir selesai. Sekarang kamu bisa{" "}
+                      Selangkah lagi! Hampir selesai. Sekarang kamu bisa
                       <br className="hidden md:block" />
                       pilih <b>preferensi bisnis</b> yang kamu suka di sini.
                     </p>
@@ -380,7 +381,7 @@ const Login = (props) => {
                     </div>
                     <div className="border border-slate-200 w-full my-2 md:my-6" />
                     <small className="text-neutral-400 mb-4 text-center">
-                      Kamu bisa memilih minimal 3 kategori lho.{" "}
+                      Kamu bisa memilih minimal 3 kategori lho.
                     </small>
                     <div className="overflow-y-auto h-72 preferensi-scroll">
                       <div className="grid grid-cols-3 md:grid-cols-4 gap-1 mb-3">
@@ -452,7 +453,7 @@ const Login = (props) => {
                 ) : (
                   <>
                     <p className=" text-sm">
-                      Daftar sebagai{" "}
+                      Daftar sebagai
                       <span className="font-bold mb-6">{email}</span>
                     </p>
                     <div
@@ -506,11 +507,11 @@ const Login = (props) => {
             ) : step === "1" ? (
               <div className="flex flex-col justify-center items-center w-full h-full gap-8">
                 <p className=" text-center px-12 text-sm">
-                  Yeay! Sudah selesai. Kami baru saja kirimkan email ke{" "}
+                  Yeay! Sudah selesai. Kami baru saja kirimkan email ke
                   <b>{email}</b> untuk konfirmasi akunmu
                 </p>
                 <p className="py-2 text-center cursor-pointer text-xs">
-                  Belum terima link?{" "}
+                  Belum terima link?
                   <a
                     onClick={() => handleResendEmail(email)}
                     className=" font-bold underline"
@@ -531,10 +532,10 @@ const Login = (props) => {
                   Dengan mendaftar ke Bukabiz.com, Anda menyetujui kebijakan
                   privasi Bukabiz untuk menyimpan, mengelola, dan memproses
                   informasi pribadi Anda. Untuk membaca lebih lanjut, silakan
-                  lihat{" "}
-                  <span className="text-blue-500">
-                    kebijakan privasi kami di sini.
-                  </span>
+                  lihat 
+                  <Link href={`/kebijakan-privasi`}>
+                    <span className="text-blue-500 hover:underline cursor-pointer"> kebijakan privasi kami di sini. </span>
+                  </Link>
                 </div>
               </div>
             ) : (
@@ -606,10 +607,10 @@ const Login = (props) => {
                     Dengan mendaftar ke Bukabiz.com, Anda menyetujui kebijakan
                     privasi Bukabiz untuk menyimpan, mengelola, dan memproses
                     informasi pribadi Anda. Untuk membaca lebih lanjut, silakan
-                    lihat{" "}
-                    <span className="text-blue-500">
-                      kebijakan privasi kami di sini.
-                    </span>
+                    lihat 
+                    <Link href={`/kebijakan-privasi`}>
+                      <span className="text-blue-500 hover:underline cursor-pointer"> kebijakan privasi kami di sini. </span>
+                    </Link>
                   </div>
                 </div>
               </>

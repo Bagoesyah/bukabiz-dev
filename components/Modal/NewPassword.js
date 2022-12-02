@@ -1,5 +1,6 @@
 import ButtonClose from "../ButtonClose"
 import ICLogo from "@assets/Logo.svg"
+import Link from "next/link"
 
 function NewPassword(props) {
   return (
@@ -29,7 +30,14 @@ function NewPassword(props) {
             </div>
           </div>
           <div className=" mt-20 text-sm font-light text-gray-400">
-            Butuh bantuan? Kunjungi bagian <span className=" text-black">Bantuan Kami</span> atau <span className=" text-black">Hubungi Kami</span>.
+            Butuh bantuan? Kunjungi bagian
+            <Link href={`/faq`}>
+              <span className=" text-black cursor-pointer hover:underline"> Bantuan Kami </span>
+            </Link>
+            atau
+            <Link href={`/kontak`}>
+              <span className=" text-black cursor-pointer hover:underline"> Hubungi Kami </span>
+            </Link>
           </div>
         </div>
       </div>

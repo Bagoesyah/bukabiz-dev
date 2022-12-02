@@ -1,12 +1,12 @@
-import Image from "next/image"
-import Link from "next/link"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useGet } from "../../libs/useAPI"
-import ButtonClose from "../ButtonClose"
-import ButtonWide from "../ButtonWide"
-import PlayerContainer from "../PlayerContainer"
-import Typography from "../Typography"
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useGet } from "../../libs/useAPI";
+import ButtonClose from "../ButtonClose";
+import ButtonWide from "../ButtonWide";
+import PlayerContainer from "../PlayerContainer";
+import Typography from "../Typography";
 
 function HowTo(props) {
   const {
@@ -16,25 +16,24 @@ function HowTo(props) {
     articleCategoryTitle,
     shortDescription,
     urlImageLong,
-    onClick
-  } = props
+    onClick,
+  } = props;
 
-  const { push } = useRouter()
-  const [similiar, setSimiliar] = useState([])
+  const { push } = useRouter();
+  const [similiar, setSimiliar] = useState([]);
   const {
     isData,
     // isLoading,
     // isError
-  } = useGet('v1/article/pas-untuk-kamu', { params: { limit: 3 } })
+  } = useGet("v1/article/pas-untuk-kamu", { params: { limit: 3 } });
 
   useEffect(() => {
     if (isData === undefined || !isData || isData.length === 0) {
-
     } else {
-      setSimiliar(isData.data.items)
+      setSimiliar(isData.data.items);
     }
-  }, [isData])
-  const loaderPas = (src) => src
+  }, [isData]);
+  const loaderPas = (src) => src;
 
   return (
     <div
@@ -64,10 +63,7 @@ function HowTo(props) {
           />
           <div className=" flex">
             <div className=" space-y-2 p-8 pr-0 w-[25rem]">
-              <Typography
-                text={articleTitle}
-                className="text-xl"
-              />
+              <Typography text={articleTitle} className="text-xl" />
               <Typography
                 text={articleCategoryTitle}
                 variant="card"
@@ -80,20 +76,19 @@ function HowTo(props) {
               />
               <Link href={`/article/${articleId}`}>
                 <div className="flex justify-center py-4">
-                  <ButtonWide
-                    variant="popup"
-                    featured="video"
-                  />
+                  <ButtonWide variant="popup" featured="video" />
                 </div>
               </Link>
             </div>
-            <div className=" p-8 w-64">
-              <Typography
-                text="Mungkin Kamu Suka"
-              />
+            <div className=" p-8 w-64 hidden md:flex md:flex-col">
+              <Typography text="Mungkin Kamu Suka" />
               <div className=" flex flex-col space-y-3 mt-2">
-                {similiar?.map(row => (
-                  <div key={row.articleId} className="flex cursor-pointer" onClick={() => push(`/article/${row.articleId}`)}>
+                {similiar?.map((row) => (
+                  <div
+                    key={row.articleId}
+                    className="flex cursor-pointer"
+                    onClick={() => push(`/article/${row.articleId}`)}
+                  >
                     <div className=" w-24">
                       <Image
                         loader={loaderPas}
@@ -120,6 +115,6 @@ function HowTo(props) {
         </article>
       </div>
     </div>
-  )
+  );
 }
-export default HowTo
+export default HowTo;

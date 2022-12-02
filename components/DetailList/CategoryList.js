@@ -1,6 +1,5 @@
 import ContainerList from "@components/ContainerList";
 import SectionPath from "@components/SectionPath";
-import ButtonRounded from "@components/ButtonRounded";
 import CardHitsFlat from "@components/CardHitsFlat";
 import ButtonWide from "@components/ButtonWide";
 import AnimatePulse from "../Loading/AnimatePulse";
@@ -8,7 +7,7 @@ import { useRouter } from "next/router";
 import Modal from "../Modal";
 import { useEffect, useState } from "react";
 import IconNotFound from "../IconNotFound";
-import { useGet } from "../../libs/useAPI";
+import { usePost } from "../../libs/useAPI";
 import { axiosGet } from "../../libs/useAxios";
 
 function CategoryList() {
@@ -22,10 +21,13 @@ function CategoryList() {
   const [popup, setPopup] = useState(false);
   const length = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  const { isData, isLoading, isError } = useGet(
-    `v1/article/category/${query.id}`,
-    { params: { page: page, limit: 8 } }
-  );
+  const { isData, isLoading, isError } = usePost(`v1/article/how-to`, {
+    params: {
+      page: page,
+      limit: 8,
+      category: query.id,
+    },
+  });
   const dataArticle = isData?.data;
 
   useEffect(() => {
@@ -72,7 +74,6 @@ function CategoryList() {
       />
       <hr />
       <ContainerList>
-        <ButtonRounded variant="filter" />
         <AnimatePulse
           name="detail list hits"
           // interval={1000}
@@ -80,7 +81,7 @@ function CategoryList() {
           isLoading={isLoading ? isLoading : isError ? true : false}
         >
           {listArticle?.length > 0 && (
-            <div className=" grid grid-cols-4 gap-2 gap-y-8">
+            <div className=" grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-2 md:gap-y-8 mx-4 md:mx-0">
               {listArticle?.map((row) => (
                 <CardHitsFlat
                   key={row.articleId}

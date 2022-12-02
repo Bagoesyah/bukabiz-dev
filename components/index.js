@@ -2,6 +2,7 @@ import Layout from './Layout'
 import Container from './Container'
 import ContainerList from './ContainerList'
 import ContainerCategory from './ContainerCategory'
+import ContainerProfile from './ContainerProfile'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import ItemCategory from './ItemCategory'
@@ -16,6 +17,8 @@ import CardPanduan from './CardPanduan'
 import CardPeluang from './CardPeluang'
 import CardPeluangAlternatif from './CardPeluangAlternatif'
 import CardRekomendasiPeluang from './CardRekomendasiPeluang'
+import CardNews from './CardNews'
+import CardTestimoni from './CardTestimoni'
 import SearchTop from './SearchTop'
 import Typography from './Typography'
 import IconLabel from './IconLabel'
@@ -23,6 +26,8 @@ import IconPlay from './IconPlay'
 import ButtonClose from './ButtonClose'
 import ButtonWide from './ButtonWide'
 import ButtonRounded from './ButtonRounded'
+import ButtonWithIcon from './ButtonWithIcon'
+import JumbotronFooter from './JumbotronFooter'
 import PlayerContainer from './PlayerContainer'
 import Modal from './Modal'
 import LabelIcon from './LabelIcon'
@@ -33,12 +38,16 @@ import ButtonLink from './ButtonLink'
 import Dangerously from './Dangerously'
 import IconNotFound from './IconNotFound'
 import SlickSlider from './SlickSlider'
+import SlickSliderGallery from './SlickSliderGallery'
+import SearchWithType from './SearchWithType'
+import TitleDetail from './TitleDetail'
 
 export {
   Layout,
   Container,
   ContainerList,
   ContainerCategory,
+  ContainerProfile,
   Navbar,
   Footer,
   ItemCategory,
@@ -53,6 +62,8 @@ export {
   CardPeluang,
   CardPeluangAlternatif,
   CardRekomendasiPeluang,
+  CardNews,
+  CardTestimoni,
   SearchTop,
   Typography,
   IconLabel,
@@ -60,6 +71,7 @@ export {
   ButtonClose,
   ButtonWide,
   ButtonRounded,
+  JumbotronFooter,
   PlayerContainer,
   Modal,
   LabelIcon,
@@ -67,7 +79,11 @@ export {
   LabelFile,
   ButtonTab,
   ButtonLink,
+  ButtonWithIcon,
   Dangerously,
   IconNotFound,
   SlickSlider,
+  SlickSliderGallery,
+  SearchWithType,
+  TitleDetail,
 }

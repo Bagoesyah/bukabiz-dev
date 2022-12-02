@@ -65,7 +65,11 @@ function MungkinSuka() {
   return (
     <Fragment>
       <ContainerList>
-        <Typography text="Mungkin Kamu Suka" variant="card" />
+        <Typography
+          text="Mungkin Kamu Suka"
+          variant="title-card"
+          className="md:text-2xl ml-4 md:ml-0"
+        />
         <AnimatePulse
           name="mungkin suka"
           // interval={1000}
@@ -73,7 +77,7 @@ function MungkinSuka() {
           isLoading={isLoading ? isLoading : isError ? true : false}
         >
           {listArticle?.length > 0 && (
-            <div className=" grid grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-0">
+            <div className=" grid grid-cols-2 md:grid-cols-4 mx-2 md:mx-0 md:gap-4">
               {listArticle?.map((row) => (
                 <CardSuka
                   key={row.articleId}
@@ -95,7 +99,7 @@ function MungkinSuka() {
                   setPage(page + 1);
                   setLoadMore(true);
                 }}
-                icon="right"
+                icon="down"
               />
             )}
           </div>

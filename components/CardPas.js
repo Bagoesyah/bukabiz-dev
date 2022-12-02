@@ -5,10 +5,10 @@ function CardPas({ title, featured, image, alt, detail, onClick }) {
   const loaderPas = ({ src }) => image ?? image;
   return (
     <div
-      className="bg-white w-full overflow-hidden rounded-lg shadow-lg md:rounded-none md:bg-transparent md:w-60 md:shadow-none cursor-pointer"
+      className=" bg-white w-full overflow-hidden rounded-xl shadow-lg md:rounded-none md:bg-transparent md:w-60 md:shadow-none cursor-pointer"
       onClick={onClick}
     >
-      <div className=" relative flex justify-center items-center md:rounded-xl md:shadow-card">
+      <div className=" relative flex justify-center items-center rounded-xl md:shadow-card">
         <Image
           loader={loaderPas}
           src={image ?? image}
@@ -25,7 +25,11 @@ function CardPas({ title, featured, image, alt, detail, onClick }) {
           variant="title-card-pas"
           text={title.length < 50 ? title : title.slice(0, 50) + ".."}
         />
-        <Typography variant="category" className=" mt-2" text={detail} />
+        <Typography
+          variant="category"
+          className=" truncate-2 mt-2 text-sm"
+          text={detail}
+        />
       </div>
     </div>
   );

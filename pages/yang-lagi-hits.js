@@ -6,7 +6,7 @@ import MungkinSuka from "@components/DetailList/MungkinSuka";
 function YangLagiHits() {
   return (
     <Layout title="Yang Lagi Hits">
-      <SectionCategory />
+      <SectionCategory className="border-b" />
       <Hits />
       <MungkinSuka />
     </Layout>

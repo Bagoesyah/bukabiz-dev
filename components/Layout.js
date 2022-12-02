@@ -1,10 +1,16 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { Navbar, Footer } from "@components/index";
+import Head from 'next/head'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+import { Footer } from '@components/index'
+
+const Navbar = dynamic(
+  () => import('../components/Navbar'),
+  { ssr: false },
+)
 
 function Layout(props) {
-  const { title, children } = props;
-  const router = useRouter();
+  const { title, children } = props
+  const router = useRouter()
 
   return (
     <div className=" font-inter">
@@ -17,6 +23,6 @@ function Layout(props) {
       {children}
       <Footer />
     </div>
-  );
+  )
 }
-export default Layout;
+export default Layout

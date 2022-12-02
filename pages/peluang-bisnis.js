@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 import { useGet, usePost } from "@library/useAPI";
 import { axiosGet } from "@library/useAxios";
@@ -8,14 +9,17 @@ import {
   SectionPath,
   ContainerList,
   ButtonWide,
+  ButtonRounded,
   Typography,
   CardSuka,
   CardPeluangAlternatif,
   Modal,
+  IconNotFound,
 } from "@components/index";
 
 import ArrowDown from "@assets/ArrowDown.svg";
 import ArrowUp from "@assets/ArrowUp.svg";
+import SectionCategory from "../components/SectionCategory";
 
 function PeluangBisnis() {
   const router = useRouter();
@@ -159,7 +163,23 @@ function PeluangBisnis() {
         });
       }
     }
-  }, [listFilter]);
+    if (listFilter.browse && router.query.browse) {
+      let browse = listFilter?.browse?.items?.filter(
+        (item) => item.browseCategoryId == router.query.browse
+      );
+      if (browse !== undefined) {
+        setFilter((prevState) => {
+          return {
+            ...prevState,
+            browse: {
+              id: browse[0].browseCategoryId,
+              name: browse[0].browseCategoryTitle,
+            },
+          };
+        });
+      }
+    }
+  }, [listFilter, router.query.category, router.query.browse]);
 
   const handleFilter = (name, id, label) => {
     setFilter({
@@ -198,17 +218,32 @@ function PeluangBisnis() {
     );
   };
 
+  function ImageView({ title, image }) {
+    const loader = (src) => image;
+    return (
+      <Image
+        className="rounded-full object-cover"
+        src={image}
+        loader={loader}
+        alt={title}
+        width={25}
+        height={25}
+      />
+    );
+  }
+
   return (
     <Layout title="Peluang Bisnis">
+      <SectionCategory className="md:hidden border-b" />
       <SectionPath
         path={["Home", "Peluang Usaha"]}
         title="Direktori Peluang Usaha Terbaik"
-        className="pt-20 hidden md:flex"
+        className="pt-20"
         desc={true}
       />
-      <hr />
+      <hr className="hidden md:flex" />
       <ContainerList>
-        <div className=" hidden md:flex space-x-5">
+        <div className="hidden md:flex gap-4 md:space-x-5">
           <div className=" relative w-full">
             {!showCategory ? (
               <div
@@ -367,6 +402,19 @@ function PeluangBisnis() {
                 </div>
                 <hr />
                 <div className=" flex flex-col py-4 overflow-y-auto h-80">
+                  <div
+                    className={` 
+                          text-sm border-l-8 p-2 px-4 hover:border-primary cursor-pointer text-gray-500 
+                          ${
+                            filter.cities.id === ""
+                              ? "border-primary font-bold"
+                              : "border-white"
+                          }
+                          `}
+                    onClick={() => handleFilter("cities", "", "Pilih Lokasi")}
+                  >
+                    Pilih Lokasi
+                  </div>
                   {listFilter?.cities?.items?.map((item) => (
                     <div
                       key={item.cityId}
@@ -399,8 +447,11 @@ function PeluangBisnis() {
           </div>
         </div>
       </ContainerList>
+      <div className="absolute ">
+        <ButtonRounded variant="filter" />
+      </div>
       <ContainerList>
-        <div className="flex w-full">
+        <div className=" flex w-full">
           <div className=" hidden md:block w-1/4 pr-10">
             <div className=" text-3xl font-bold">Browse Kategori</div>
             <div className=" flex flex-col space-y-4 py-12 ">
@@ -418,7 +469,11 @@ function PeluangBisnis() {
                     )
                   }
                 >
-                  <div className=" w-8 h-8 rounded-full bg-gray-400" />
+                  {/* <div className=" w-8 h-8 rounded-full bg-gray-400" /> */}
+                  <ImageView
+                    title={item.browseCategoryTitle}
+                    image={item.urlFile}
+                  />
                   <span>{item.browseCategoryTitle}</span>
                 </div>
               ))}
@@ -477,8 +532,8 @@ function PeluangBisnis() {
               )}
             </div>
           </div>
-          <div className=" w-full md:w-3/4">
-            <div className=" grid grid-cols-2 md:grid-cols-3 md:gap-4">
+          <div className=" md:w-3/4">
+            <div className=" grid grid-cols-2 md:grid-cols-3 md:gap-4 mx-2 md:mx-0">
               {listArticle?.map((item) => (
                 <CardPeluangAlternatif
                   key={item.articleId}
@@ -494,6 +549,16 @@ function PeluangBisnis() {
                 />
               ))}
             </div>
+            {listArticle.length === 0 && !isLoading && (
+              <>
+                <Typography
+                  text="Kami tidak menemukan hasil"
+                  variant="card"
+                  className="p-8 pb-20 text-center"
+                />
+                <IconNotFound />
+              </>
+            )}
           </div>
         </div>
         <div className="flex justify-center py-4">
@@ -512,8 +577,12 @@ function PeluangBisnis() {
       <hr />
 
       <ContainerList>
-        <Typography text="Mungkin Kamu Suka" variant="card" />
-        <div className=" grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+        <Typography
+          text="Mungkin Kamu Suka"
+          variant="title-card"
+          className="md:text-2xl ml-4 md:ml-0"
+        />
+        <div className=" grid grid-cols-2 md:grid-cols-4 mx-2 md:mx-0 md:gap-4">
           {isDataSuka?.data?.items?.map((item) => (
             <CardSuka
               key={item.articleId}

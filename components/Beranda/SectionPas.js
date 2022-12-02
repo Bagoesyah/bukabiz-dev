@@ -58,8 +58,8 @@ function SectionPas() {
 
   return (
     <>
-      <section className="relative bg-gray-100 flex justify-center py-12 px-4 md:px-0">
-        <div className="md:grid md:grid-cols-2 md:gap-8">
+      <section className=" bg-gray-100 flex justify-center py-8 md:py-12">
+        <div className="md:grid md:grid-cols-2 md:gap-8 px-4 md:px-0">
           <AnimatePulse
             name="card terbaru"
             // interval={1000}
@@ -71,6 +71,9 @@ function SectionPas() {
                 : false
             }
           >
+            <div className=" text-xl font-bold tracking-tight md:hidden mb-4">
+              Yang Pas Untuk Kamu
+            </div>
             <CardTerbaru
               articleNew={articleNew?.data}
               onClick={() =>
@@ -94,7 +97,7 @@ function SectionPas() {
             }
           >
             <div>
-              <div className=" absolute md:static top-4 md:top-12 text-lg md:text-4xl font-bold tracking-tight">
+              <div className=" text-4xl font-bold tracking-tight hidden md:flex">
                 Yang Pas Untuk Kamu
               </div>
               <div className=" grid grid-cols-2 gap-4 mt-4">

@@ -6,7 +6,6 @@ import ICFacebookLightLogo from "@assets/FacebookLightLogo.svg"
 import ICTwitterLightLogo from "@assets/TwitterLightLogo.svg"
 import ICMail from "@assets/Mail.svg"
 import ICLink from "@assets/Link.svg"
-import PeluangAlternatif from "@assets/PeluangAlternatif.png"
 
 function Share(props) {
   const {
@@ -39,7 +38,7 @@ function Share(props) {
                   width={75} height={47}
                 />
               </div>
-              <div>Toko Kopi Tuku</div>
+              <div>{articleTitle}</div>
             </div>
             <div className=" text-center text-sm font-bold mt-8">
               Mau bagikan lewat mana?

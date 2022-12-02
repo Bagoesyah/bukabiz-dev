@@ -8,6 +8,7 @@ import { Otp } from "@components/Modal/index";
 import ICLogo from "@assets/Logo.svg";
 import EyeOpen from "@assets/EyeOpen.svg";
 import EyeClosed from "@assets/EyeClosed.svg";
+import Link from "next/link";
 
 function ResetPassword(props) {
   const [email, setEmail] = useState("");
@@ -197,9 +198,14 @@ function ResetPassword(props) {
                 </div>
               </div>
               <div className=" mt-20 text-sm font-light text-gray-400">
-                Butuh bantuan? Kunjungi bagian{" "}
-                <span className=" text-black">Bantuan Kami</span> atau{" "}
-                <span className=" text-black">Hubungi Kami</span>.
+                Butuh bantuan? Kunjungi bagian
+                <Link href={`/faq`}>
+                  <span className=" text-black cursor-pointer hover:underline"> Bantuan Kami </span>
+                </Link>
+                atau
+                <Link href={`/kontak`}>
+                  <span className=" text-black cursor-pointer hover:underline"> Hubungi Kami </span>
+                </Link>
               </div>
             </>
           ) : (
@@ -242,9 +248,14 @@ function ResetPassword(props) {
                 </div>
               </div>
               <div className=" mt-32 md:mt-20 text-sm font-light text-gray-400">
-                Butuh bantuan? Kunjungi bagian{" "}
-                <span className=" text-black">Bantuan Kami</span> atau{" "}
-                <span className=" text-black">Hubungi Kami</span>.
+                Butuh bantuan? Kunjungi bagian
+                <Link href={`/faq`}>
+                  <span className=" text-black cursor-pointer hover:underline"> Bantuan Kami  </span>
+                </Link>
+                atau
+                <Link href={`/kontak`}>
+                  <span className=" text-black cursor-pointer hover:underline"> Hubungi Kami </span>
+                </Link>
               </div>
             </>
           )}

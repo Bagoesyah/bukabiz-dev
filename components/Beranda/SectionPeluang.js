@@ -1,18 +1,13 @@
 import { useState } from "react";
-import {
-  Container,
-  CardPeluang,
-  SlickSlider,
-  Modal
-} from '@components/index'
+import { Container, CardPeluang, SlickSlider, Modal } from "@components/index";
 import AnimatePulse from "@components/Loading/AnimatePulse";
-import { axiosGet } from "@library/useAxios"
+import { axiosGet } from "@library/useAxios";
 
 function SectionPeluang(props) {
-  const { isData, isLoading, isError } = props.data
-  const length = [1, 2, 3, 4]
-  const [popup, setPopup] = useState(false)
-  const [data, setData] = useState({})
+  const { isData, isLoading, isError } = props.data;
+  const length = [1, 2, 3, 4];
+  const [popup, setPopup] = useState(false);
+  const [data, setData] = useState({});
 
   const handleClick = (id) => {
     axiosGet(
@@ -20,18 +15,18 @@ function SectionPeluang(props) {
       {
         headers: {
           // Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
       },
-      success => {
-        setData(success.data.data)
-        setPopup(true)
+      (success) => {
+        setData(success.data.data);
+        setPopup(true);
       },
-      error => {
+      (error) => {
         console.log(error);
       }
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -42,8 +37,8 @@ function SectionPeluang(props) {
           count={length}
           isLoading={isLoading ? isLoading : isError ? true : false}
         >
-          <SlickSlider>
-            {isData?.data?.items.map(item => (
+          <SlickSlider className="mx-2 md:mx-0">
+            {isData?.data?.items.map((item) => (
               <CardPeluang
                 key={item.articleId}
                 onClick={() => handleClick(item.articleId)}
@@ -57,15 +52,11 @@ function SectionPeluang(props) {
           </SlickSlider>
         </AnimatePulse>
       </Container>
-      
+
       {popup ? (
-        <Modal
-          {...data}
-          variant="peluang"
-          onClick={() => setPopup(false)}
-        />
+        <Modal {...data} variant="peluang" onClick={() => setPopup(false)} />
       ) : null}
     </>
-  )
+  );
 }
-export default SectionPeluang
+export default SectionPeluang;

@@ -25,7 +25,7 @@ function CardHitsFlat({ title, image, alt, desc, featured, onClick }) {
           // text={title.length < 60 ? title : title.slice(0, 60) + ".."}
           text={title}
           variant="card"
-          className=" title-card-mobile mt-3 text-base h-[70px] md:h-24"
+          className="truncate-3 mt-3 text-base h-[70px] md:h-24"
         />
         <Typography
           // paragraph={true}

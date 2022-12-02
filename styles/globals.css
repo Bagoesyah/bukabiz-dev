@@ -104,8 +104,65 @@ nav {
   -webkit-box-orient: vertical;
 }
 
+.detail-card-mobile {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.title-card-peluang {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.truncate-5 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
+.truncate-1 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.truncate-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.truncate-3 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.truncate-4 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+.truncate-5 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
 .btn-rounded {
-  @apply py-2 px-5 text-gray-400 border border-gray-300 rounded-full hover:bg-primary hover:text-white hover:border-primary duration-300 text-sm;
+  @apply py-2 px-4 md:px-5 text-gray-400 border border-gray-300 rounded-full hover:bg-primary hover:text-white hover:border-primary duration-300 text-xs;
+}
+.btn-rounded-filter {
+  @apply py-2 px-5 md:px-5 text-gray-800 border border-gray-400 rounded-full hover:bg-primary hover:text-white hover:border-primary duration-300 text-sm;
 }
 
 .btn-rounded-panduan {
@@ -210,4 +267,8 @@ input[type="number"] {
 /* Handle on hover */
 .preferensi-scroll::-webkit-scrollbar-thumb:hover {
   background: #ffde00;
+}
+
+p > img {
+  @apply object-cover;
 }

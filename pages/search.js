@@ -143,7 +143,7 @@ function Search() {
               isLoading={isLoading ? isLoading : isError ? true : false}
             >
               {listArticle?.length > 0 && (
-                <div className=" grid grid-cols-4 gap-4 gap-y-8 mt-4">
+                <div className=" grid grid-cols-2 md:grid-cols-4 gap-4 mx-4 md:mx-0 md:gap-y-8 mt-4">
                   {listArticle?.map((row) => (
                     <CardHitsFlat
                       key={row.articleId}
@@ -159,7 +159,7 @@ function Search() {
               )}
             </AnimatePulse>
           ) : type == 2 ? (
-            <div className=" grid grid-cols-4 gap-4">
+            <div className=" grid grid-cols-2 md:grid-cols-4 mx-2 md:mx-0 md:gap-4">
               {listArticle?.map((item) => (
                 <CardPanduan
                   key={item.articleId}
@@ -176,7 +176,7 @@ function Search() {
               ))}
             </div>
           ) : (
-            <div className=" grid grid-cols-4 gap-4">
+            <div className=" grid grid-cols-2 md:grid-cols-3 md:gap-4 mx-2 md:mx-0">
               {listArticle?.map((item) => (
                 <CardPeluangAlternatif
                   key={item.articleId}

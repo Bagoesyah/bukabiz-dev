@@ -15,7 +15,7 @@ function CardHits({
   return (
     <>
       <div
-        className={`p-2 ${isDetail ? "pb-0" : "py-8"} cursor-pointer`}
+        className={`p-2 ${isDetail ? "pb-0" : " py-4 md:py-8"} cursor-pointer`}
         onClick={onClick}
       >
         <div
@@ -29,7 +29,7 @@ function CardHits({
               src={image ?? image}
               alt={alt}
               width={isDetail ? 600 : 300}
-              height={250}
+              height={isDetail ? 350 : 250}
               unoptimized
               className=" object-cover rounded-t-xl"
             />
@@ -40,7 +40,7 @@ function CardHits({
               // text={title.length < 45 ? title : title.slice(0, 45) + ".."}
               text={title}
               variant="card"
-              className=" title-card-mobile h-[70px] md:h-24"
+              className=" truncate-3 h-[70px] md:h-24"
             />
             {!isDetail && (
               <Typography
@@ -48,7 +48,7 @@ function CardHits({
                 text={desc}
                 variant="card"
                 paragraph={true}
-                className=" desc-card-mobile mt-3 h-16 md:h-20"
+                className=" truncate-4 mt-3 h-16 md:h-20"
               />
             )}
           </div>

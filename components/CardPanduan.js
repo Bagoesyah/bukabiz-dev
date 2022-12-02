@@ -16,7 +16,9 @@ function CardPanduan({
   const loader = ({ src }) => image ?? image;
   return (
     <div
-      className={` p-2 ${variant === "home" ? "py-8 " : "pb-4"} ${className}`}
+      className={` p-2 ${
+        variant === "home" ? "py-4 md:py-8 " : "pb-4"
+      } ${className}`}
     >
       <div
         className={` bg-white flex flex-col rounded-lg shadow-lg md:shadow-card ${
@@ -43,19 +45,19 @@ function CardPanduan({
             </div>
           )}
         </div>
-        <div className=" p-3 md:p-6">
+        <div className=" p-2 md:p-6">
           <Typography
             text={title.length < 45 ? title : title.slice(0, 45) + ".."}
             variant="card"
-            className=" h-14 md:h-24"
+            className=" truncate-3 h-14 md:h-24 leading-5"
           />
           <Typography
             text={businnesStage}
             variant="category"
-            className=" uppercase mt-5"
+            className=" uppercase mt-3 md:mt-5"
           />
           <div
-            className=" desc-card-mobile desc-card mt-2 h-16 md:h-20"
+            className=" truncate-4 desc-card mt-2 h-16 md:h-20"
             dangerouslySetInnerHTML={{ __html: desc }}
           />
           <div className=" flex justify-center">

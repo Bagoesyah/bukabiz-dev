@@ -7,8 +7,8 @@ import SectionPeluangPulse from "./SectionPeluangPulse";
 import SectionPanduanPulse from "./SectionPanduanPulse";
 import SectionSearchPulse from "./SectionSearchPulse";
 import TitleSectionPulse from "./TitleSectionPulse";
-import TitlePath from "./TitlePath";
-import TitleDetailList from "./TitleDetailList";
+import TitlePathPulse from "./TitlePathPulse";
+import TitleDetailListPulse from "./TitleDetailListPulse";
 import HitsPulse from "./HitsPulse";
 import ButtonWidePulse from "./ButtonWidePulse";
 import MungkinSukaPulse from "./MungkinSukaPulse";
@@ -30,8 +30,8 @@ function AnimatePulse({ name, count, interval, children, isLoading }) {
     if (name === 'section hits') return <SectionHitsPulse count={count} />
     if (name === 'section peluang') return <SectionPeluangPulse count={count} />
     if (name === 'section panduan') return <SectionPanduanPulse count={count} />
-    if (name === 'title path') return <TitlePath />
-    if (name === 'title detail list') return <TitleDetailList />
+    if (name === 'title path') return <TitlePathPulse />
+    if (name === 'title detail list') return <TitleDetailListPulse />
     if (name === 'detail list hits') return <HitsPulse count={count} />
     if (name === 'mungkin suka') return <MungkinSukaPulse count={count} />
     if (name === 'button wide') return <ButtonWidePulse />
